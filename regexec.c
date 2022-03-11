@@ -119,7 +119,7 @@ static const char non_utf8_target_but_utf8_required[]
 } STMT_END
 
 #ifndef STATIC
-#define	STATIC	static
+#define STATIC	static
 #endif
 
 /*

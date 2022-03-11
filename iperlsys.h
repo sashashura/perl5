@@ -1358,7 +1358,7 @@ struct IPerlSockInfo
         (*PL_Sock->pSocketpair)(PL_Sock, a, t, p, f)
 
 #ifdef WIN32
-#define	PerlSock_closesocket(s)						\
+#define PerlSock_closesocket(s)						\
         (*PL_Sock->pClosesocket)(PL_Sock, s)
 #endif
 

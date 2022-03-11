@@ -144,7 +144,7 @@ EXTERN_C const struct regexp_engine wild_reg_engine;
 #include "unicode_constants.h"
 
 #ifndef STATIC
-#define	STATIC	static
+#define STATIC	static
 #endif
 
 /* this is a chain of data about sub patterns we are processing that
@@ -496,16 +496,16 @@ struct RExC_state_t {
     if (RExC_naughty < TOO_NAUGHTY) \
         RExC_naughty += RExC_naughty / (exp) + (add)
 
-#define	isNON_BRACE_QUANTIFIER(c)   ((c) == '*' || (c) == '+' || (c) == '?')
-#define	isQUANTIFIER(s,e)  (   isNON_BRACE_QUANTIFIER(*s)                      \
+#define isNON_BRACE_QUANTIFIER(c)   ((c) == '*' || (c) == '+' || (c) == '?')
+#define isQUANTIFIER(s,e)  (   isNON_BRACE_QUANTIFIER(*s)                      \
                             || ((*s) == '{' && regcurly(s, e, NULL)))
 
 /*
  * Flags to be passed up.
  */
-#define	HASWIDTH	0x01	/* Known to not match null strings, could match
+#define HASWIDTH	0x01	/* Known to not match null strings, could match
                                    non-null ones. */
-#define	SIMPLE		0x02    /* Exactly one character wide */
+#define SIMPLE		0x02    /* Exactly one character wide */
                                 /* (or LNBREAK as a special case) */
 #define POSTPONED	0x08    /* (?1),(?&name), (??{...}) or similar */
 #define TRYAGAIN	0x10	/* Weeded out a declaration. */
@@ -979,22 +979,22 @@ static const scan_data_t zero_scan_data = {
     code;                                                               \
 } STMT_END
 
-#define	FAIL(msg) _FAIL(			    \
+#define FAIL(msg) _FAIL(			    \
     Perl_croak(aTHX_ "%s in regex m/%" UTF8f "%s/",	    \
             msg, UTF8fARG(UTF, len, RExC_precomp), ellipses))
 
-#define	FAIL2(msg,arg) _FAIL(			    \
+#define FAIL2(msg,arg) _FAIL(			    \
     Perl_croak(aTHX_ msg " in regex m/%" UTF8f "%s/",	    \
             arg, UTF8fARG(UTF, len, RExC_precomp), ellipses))
 
-#define	FAIL3(msg,arg1,arg2) _FAIL(			    \
+#define FAIL3(msg,arg1,arg2) _FAIL(			    \
     Perl_croak(aTHX_ msg " in regex m/%" UTF8f "%s/",	    \
      arg1, arg2, UTF8fARG(UTF, len, RExC_precomp), ellipses))
 
 /*
  * Simple_vFAIL -- like FAIL, but marks the current location in the scan
  */
-#define	Simple_vFAIL(m) STMT_START {					\
+#define Simple_vFAIL(m) STMT_START {					\
     Perl_croak(aTHX_ "%s" REPORT_LOCATION,				\
             m, REPORT_LOCATION_ARGS(RExC_parse));	                \
 } STMT_END
@@ -1002,7 +1002,7 @@ static const scan_data_t zero_scan_data = {
 /*
  * Calls SAVEDESTRUCTOR_X if needed, then Simple_vFAIL()
  */
-#define	vFAIL(m) STMT_START {				\
+#define vFAIL(m) STMT_START {				\
     PREPARE_TO_DIE;                                     \
     Simple_vFAIL(m);					\
 } STMT_END
@@ -1010,7 +1010,7 @@ static const scan_data_t zero_scan_data = {
 /*
  * Like Simple_vFAIL(), but accepts two arguments.
  */
-#define	Simple_vFAIL2(m,a1) STMT_START {			\
+#define Simple_vFAIL2(m,a1) STMT_START {			\
     S_re_croak(aTHX_ UTF, m REPORT_LOCATION, a1,		\
                       REPORT_LOCATION_ARGS(RExC_parse));	\
 } STMT_END
@@ -1018,7 +1018,7 @@ static const scan_data_t zero_scan_data = {
 /*
  * Calls SAVEDESTRUCTOR_X if needed, then Simple_vFAIL2().
  */
-#define	vFAIL2(m,a1) STMT_START {			\
+#define vFAIL2(m,a1) STMT_START {			\
     PREPARE_TO_DIE;                                     \
     Simple_vFAIL2(m, a1);				\
 } STMT_END
@@ -1027,7 +1027,7 @@ static const scan_data_t zero_scan_data = {
 /*
  * Like Simple_vFAIL(), but accepts three arguments.
  */
-#define	Simple_vFAIL3(m, a1, a2) STMT_START {			\
+#define Simple_vFAIL3(m, a1, a2) STMT_START {			\
     S_re_croak(aTHX_ UTF, m REPORT_LOCATION, a1, a2,		\
             REPORT_LOCATION_ARGS(RExC_parse));	                \
 } STMT_END
@@ -1035,7 +1035,7 @@ static const scan_data_t zero_scan_data = {
 /*
  * Calls SAVEDESTRUCTOR_X if needed, then Simple_vFAIL3().
  */
-#define	vFAIL3(m,a1,a2) STMT_START {			\
+#define vFAIL3(m,a1,a2) STMT_START {			\
     PREPARE_TO_DIE;                                     \
     Simple_vFAIL3(m, a1, a2);				\
 } STMT_END
@@ -1043,12 +1043,12 @@ static const scan_data_t zero_scan_data = {
 /*
  * Like Simple_vFAIL(), but accepts four arguments.
  */
-#define	Simple_vFAIL4(m, a1, a2, a3) STMT_START {		\
+#define Simple_vFAIL4(m, a1, a2, a3) STMT_START {		\
     S_re_croak(aTHX_ UTF, m REPORT_LOCATION, a1, a2, a3,	\
             REPORT_LOCATION_ARGS(RExC_parse));	                \
 } STMT_END
 
-#define	vFAIL4(m,a1,a2,a3) STMT_START {			\
+#define vFAIL4(m,a1,a2,a3) STMT_START {			\
     PREPARE_TO_DIE;                                     \
     Simple_vFAIL4(m, a1, a2, a3);			\
 } STMT_END
@@ -1132,84 +1132,84 @@ static const scan_data_t zero_scan_data = {
                                         a1, REPORT_LOCATION_ARGS(loc)));    \
     } STMT_END
 
-#define	ckWARNreg(loc,m) 					        \
+#define ckWARNreg(loc,m) 					        \
     _WARN_HELPER(loc, packWARN(WARN_REGEXP),                            \
                       Perl_ck_warner(aTHX_ packWARN(WARN_REGEXP),       \
                                           m REPORT_LOCATION,	        \
                                           REPORT_LOCATION_ARGS(loc)))
 
-#define	vWARN(loc, m)           				        \
+#define vWARN(loc, m)           				        \
     _WARN_HELPER(loc, packWARN(WARN_REGEXP),                            \
                       Perl_warner(aTHX_ packWARN(WARN_REGEXP),          \
                                        m REPORT_LOCATION,               \
                                        REPORT_LOCATION_ARGS(loc)))      \
 
-#define	vWARN_dep(loc, m)           				        \
+#define vWARN_dep(loc, m)           				        \
     _WARN_HELPER(loc, packWARN(WARN_DEPRECATED),                        \
                       Perl_warner(aTHX_ packWARN(WARN_DEPRECATED),      \
                                        m REPORT_LOCATION,               \
                                        REPORT_LOCATION_ARGS(loc)))
 
-#define	ckWARNdep(loc,m)            				        \
+#define ckWARNdep(loc,m)            				        \
     _WARN_HELPER(loc, packWARN(WARN_DEPRECATED),                        \
                       Perl_ck_warner_d(aTHX_ packWARN(WARN_DEPRECATED), \
                                             m REPORT_LOCATION,          \
                                             REPORT_LOCATION_ARGS(loc)))
 
-#define	ckWARNregdep(loc,m)             				    \
+#define ckWARNregdep(loc,m)             				    \
     _WARN_HELPER(loc, packWARN2(WARN_DEPRECATED, WARN_REGEXP),              \
                       Perl_ck_warner_d(aTHX_ packWARN2(WARN_DEPRECATED,     \
                                                       WARN_REGEXP),         \
                                              m REPORT_LOCATION,             \
                                              REPORT_LOCATION_ARGS(loc)))
 
-#define	ckWARN2reg_d(loc,m, a1)             				    \
+#define ckWARN2reg_d(loc,m, a1)             				    \
     _WARN_HELPER(loc, packWARN(WARN_REGEXP),                                \
                       Perl_ck_warner_d(aTHX_ packWARN(WARN_REGEXP),         \
                                             m REPORT_LOCATION,              \
                                             a1, REPORT_LOCATION_ARGS(loc)))
 
-#define	ckWARN2reg(loc, m, a1)                                              \
+#define ckWARN2reg(loc, m, a1)                                              \
     _WARN_HELPER(loc, packWARN(WARN_REGEXP),                                \
                       Perl_ck_warner(aTHX_ packWARN(WARN_REGEXP),           \
                                           m REPORT_LOCATION,	            \
                                           a1, REPORT_LOCATION_ARGS(loc)))
 
-#define	vWARN3(loc, m, a1, a2)          				    \
+#define vWARN3(loc, m, a1, a2)          				    \
     _WARN_HELPER(loc, packWARN(WARN_REGEXP),                                \
                       Perl_warner(aTHX_ packWARN(WARN_REGEXP),              \
                                        m REPORT_LOCATION,                   \
                                        a1, a2, REPORT_LOCATION_ARGS(loc)))
 
-#define	ckWARN3reg(loc, m, a1, a2)          				    \
+#define ckWARN3reg(loc, m, a1, a2)          				    \
     _WARN_HELPER(loc, packWARN(WARN_REGEXP),                                \
                       Perl_ck_warner(aTHX_ packWARN(WARN_REGEXP),           \
                                           m REPORT_LOCATION,                \
                                           a1, a2,                           \
                                           REPORT_LOCATION_ARGS(loc)))
 
-#define	vWARN4(loc, m, a1, a2, a3)          				\
+#define vWARN4(loc, m, a1, a2, a3)          				\
     _WARN_HELPER(loc, packWARN(WARN_REGEXP),                            \
                       Perl_warner(aTHX_ packWARN(WARN_REGEXP),          \
                                        m REPORT_LOCATION,               \
                                        a1, a2, a3,                      \
                                        REPORT_LOCATION_ARGS(loc)))
 
-#define	ckWARN4reg(loc, m, a1, a2, a3)          			\
+#define ckWARN4reg(loc, m, a1, a2, a3)          			\
     _WARN_HELPER(loc, packWARN(WARN_REGEXP),                            \
                       Perl_ck_warner(aTHX_ packWARN(WARN_REGEXP),       \
                                           m REPORT_LOCATION,            \
                                           a1, a2, a3,                   \
                                           REPORT_LOCATION_ARGS(loc)))
 
-#define	vWARN5(loc, m, a1, a2, a3, a4)          			\
+#define vWARN5(loc, m, a1, a2, a3, a4)          			\
     _WARN_HELPER(loc, packWARN(WARN_REGEXP),                            \
                       Perl_warner(aTHX_ packWARN(WARN_REGEXP),          \
                                        m REPORT_LOCATION,		\
                                        a1, a2, a3, a4,                  \
                                        REPORT_LOCATION_ARGS(loc)))
 
-#define	ckWARNexperimental(loc, class, m)                               \
+#define ckWARNexperimental(loc, class, m)                               \
     STMT_START {                                                        \
         if (! RExC_warned_ ## class) { /* warn once per compilation */  \
             RExC_warned_ ## class = 1;                                  \
