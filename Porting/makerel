@@ -88,9 +88,7 @@ cleanup($relroot, $reldir) if $opts{c};
 
 print "Cross-checking the MANIFEST...\n";
 my ($missfile, $missentry) = fullcheck();
-@$missentry
-    = grep {$_ !~ m!^\.(?:git|github|mailmap)! and $_ !~ m!(?:/|^)\.gitignore!} @$missentry;
-if (@$missfile ) {
+if (@$missfile) {
     warn "Can't make a release with MANIFEST files missing:\n";
     warn "\t".$_."\n" for (@$missfile);
 }
