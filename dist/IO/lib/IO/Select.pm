@@ -10,7 +10,7 @@ use     strict;
 use warnings::register;
 require Exporter;
 
-our $VERSION = "1.49";
+our $VERSION = "1.50";
 
 our @ISA = qw(Exporter); # This is only so we can do version checking
 
@@ -414,4 +414,3 @@ This program is free software; you can redistribute it and/or
 modify it under the same terms as Perl itself.
 
 =cut
-

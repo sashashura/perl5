@@ -7,7 +7,7 @@ use Carp;
 use strict;
 use warnings;
 
-our $VERSION = "1.49";
+our $VERSION = "1.50";
 XSLoader::load 'IO', $VERSION;
 
 sub import {
@@ -67,4 +67,3 @@ IO::Socket, IO::Dir.  You should instead explicitly import the IO
 modules you want.
 
 =cut
-
