@@ -42,4 +42,5 @@ podlators cpan/podlators/t/general/basic.t 603125aa84703f7bc2c4c838c42f95b26a72e
 podlators cpan/podlators/t/man/empty.t c1c7eac7a3479a2f11fdbdd0914bc2af70489b72
 podlators cpan/podlators/t/man/no-encode.t 80eb9de201bdc0b7170d9cbde856dc32e37378a0
 podlators cpan/podlators/t/text/invalid.t 3d48179b7a0fd3cddb74c18e4f1cd6f66a0a7609
+threads dist/threads/threads.h da39a3ee5e6b4b0d3255bfef95601890afd80709
 version cpan/version/lib/version.pm a963b513cf812bd7f4d28b3422efd9904e70a34c
