@@ -365,6 +365,12 @@ constructed to call the C<VERSION>, C<import> and C<unimport> methods
 as part of a C<use> statement and attribute application, nor when
 assigning to an C<:lvalue> subroutine.
 
+=item *
+
+A new magic type C<PERL_MAGIC_value> has been added. This is available for
+use like C<PERL_MAGIC_ext>, but is a value magic: upon localization the new
+value will not be magical.
+
 =back
 
 =head1 Selected Bug Fixes
