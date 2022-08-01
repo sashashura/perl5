@@ -3135,9 +3135,7 @@ S_my_langinfo(const nl_item item, bool toggle)
         /* Copy to a per-thread buffer, which is also one that won't be
          * destroyed by a subsequent setlocale(), such as the
          * RESTORE_LC_NUMERIC may do just below. */
-        retval = save_to_buffer(nl_langinfo(item),
-                                ((const char **) &PL_langinfo_buf),
-                                &PL_langinfo_bufsize);
+        retval = save_to_buffer(nl_langinfo(item), &PL_langinfo_buf, &PL_langinfo_bufsize);
         NL_LANGINFO_UNLOCK;
 
         if (toggle) {
@@ -3166,9 +3164,7 @@ S_my_langinfo(const nl_item item, bool toggle)
 
         /* We have to save it to a buffer, because the freelocale() just below
          * can invalidate the internal one */
-        retval = save_to_buffer(nl_langinfo_l(item, cur),
-                                ((const char **) &PL_langinfo_buf),
-                                &PL_langinfo_bufsize);
+        retval = save_to_buffer(nl_langinfo_l(item, cur), &PL_langinfo_buf, &PL_langinfo_bufsize);
     }
 
 #    endif
@@ -3254,8 +3250,7 @@ S_my_langinfo(const nl_item item, bool toggle)
                             : '+';
 
             retval = save_to_buffer(Perl_form(aTHX_ "%c%s", precedes, currency),
-                                    ((const char **) &PL_langinfo_buf),
-                                    &PL_langinfo_bufsize);
+                                    &PL_langinfo_buf, &PL_langinfo_bufsize);
                 }
 
 #      ifdef TS_W32_BROKEN_LOCALECONV
@@ -3396,9 +3391,7 @@ S_my_langinfo(const nl_item item, bool toggle)
                     }
                 }
 
-                retval = save_to_buffer(temp,
-                                        ((const char **) &PL_langinfo_buf),
-                                        &PL_langinfo_bufsize);
+                retval = save_to_buffer(temp, &PL_langinfo_buf, &PL_langinfo_bufsize);
 
 #      ifdef TS_W32_BROKEN_LOCALECONV
 
@@ -3527,8 +3520,7 @@ S_my_langinfo(const nl_item item, bool toggle)
              * time, it all works */
             const char * temp = my_strftime(format, 30, 30, hour, mday, mon,
                                              2011, 0, 0, 0);
-            retval = save_to_buffer(temp, (const char **) &PL_langinfo_buf,
-                                          &PL_langinfo_bufsize);
+            retval = save_to_buffer(temp, &PL_langinfo_buf, &PL_langinfo_bufsize);
             Safefree(temp);
 
             /* If the item is 'ALT_DIGITS', 'PL_langinfo_buf' contains the
@@ -3607,9 +3599,7 @@ S_my_langinfo(const nl_item item, bool toggle)
             /* Use everything past the dot */
             retval++;
 
-            retval = save_to_buffer(retval,
-                                    ((const char **) &PL_langinfo_buf),
-                                    &PL_langinfo_bufsize);
+            retval = save_to_buffer(retval, &PL_langinfo_buf, &PL_langinfo_bufsize);
         }
 
         break;
