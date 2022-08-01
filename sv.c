@@ -12036,6 +12036,7 @@ Perl_sv_vcatpvfn_flags(pTHX_ SV *const sv, const char *const pat, const STRLEN p
 #endif
     /* we never change this unless USE_LOCALE_NUMERIC */
     bool in_lc_numeric = FALSE;
+    SV *tmp_sv = NULL;
 
     PERL_ARGS_ASSERT_SV_VCATPVFN_FLAGS;
     PERL_UNUSED_ARG(maybe_tainted);
@@ -12140,6 +12141,8 @@ Perl_sv_vcatpvfn_flags(pTHX_ SV *const sv, const char *const pat, const STRLEN p
         STRLEN elen      = 0;         /* the length  of the element string */
 
         char c;                       /* the actual format ('d', s' etc) */
+
+        bool escape_it   = FALSE;     /* if this is a string should we quote and escape it? */
 
 
         /* echo everything up to the next format specification */
@@ -12514,6 +12517,21 @@ Perl_sv_vcatpvfn_flags(pTHX_ SV *const sv, const char *const pat, const STRLEN p
             }
 
         string:
+            if (escape_it) {
+                U32 flags = PERL_PV_PRETTY_QUOTEDPREFIX;
+                if (is_utf8)
+                    flags |= PERL_PV_ESCAPE_UNI;
+
+                if (!tmp_sv) {
+                    /* "blah"... where blah might be made up
+                     * of characters like \x{1234} */
+                    tmp_sv = newSV(1 + (PERL_QUOTEDPREFIX_LEN * 8) + 1 + 3);
+                    sv_2mortal(tmp_sv);
+                }
+                pv_pretty(tmp_sv, eptr, elen, PERL_QUOTEDPREFIX_LEN,
+                            NULL, NULL, flags);
+                eptr = SvPV_const(tmp_sv, elen);
+            }
             if (has_precis && precis < elen)
                 elen = precis;
             break;
@@ -12532,23 +12550,40 @@ Perl_sv_vcatpvfn_flags(pTHX_ SV *const sv, const char *const pat, const STRLEN p
              * extensions. These are currently:
              *
              * %-p       (SVf)  Like %s, but gets the string from an SV*
-             *                  arg rather than a char* arg.
+             *                  arg rather than a char* arg. Use C<SVfARG()>
+             *                  to set up the argument properly.
              *                  (This was previously %_).
              *
-             * %-<num>p         Ditto but like %.<num>s (i.e. num is max width)
+             * %1p       (PVf_QUOTEDPREFIX). Like raw %s, but it is escaped
+             *                  and quoted.
+             *
+             * %5p       (SVfQUOTEDPREFIX) Like SVf, but length restricted, escaped
+             *                  and quoted with pv_pretty. Intended for error messages.
+             *
+             * %-<num>p         Ditto but like %.<num>s (i.e. num is max width),
+             *                  there is no escaped and quoted version of this.
              *
              * %2p       (HEKf) Like %s, but using the key string in a HEK
+             * %7p       (HEKf_QUOTEDPREFIX) ... but escaped and quoted.
              *
              * %3p       (HEKf256) Ditto but like %.256s
+             * %8p       (HEKf256_QUOTEDPREFIX) ... but escaped and quoted
              *
              * %d%lu%4p  (UTF8f) A utf8 string. Consumes 3 args:
              *                       (cBOOL(utf8), len, string_buf).
              *                   It's handled by the "case 'd'" branch
              *                   rather than here.
+             * %d%lu%9p  (UTF8fQUOTEDPREFIX) .. but escaped and quoted.
              *
-             * %<num>p   where num is 1 or > 4: reserved for future
+             *
+             * %<num>p   where num is > 9: reserved for future
              *           extensions. Warns, but then is treated as a
              *           general %p (print hex address) format.
+             *
+             * NOTE: If you add a new magic %p value you will
+             * need to update F<t/porting/diag.t> to be aware of it
+             * on top of adding the various defines and etc. Do not
+             * forget to add it to F<pod/perlguts.pod> as well.
              */
 
             if (   args
@@ -12560,10 +12595,12 @@ Perl_sv_vcatpvfn_flags(pTHX_ SV *const sv, const char *const pat, const STRLEN p
                 && q[-2] != '*'
                 && q[-2] != '$'
             ) {
-                if (left) {			/* %-p (SVf), %-NNNp */
-                    if (width) {
+                if (left || width == 5) {                /* %-p (SVf), %-NNNp, %5p */
+                    if (left && width) {
                         precis = width;
                         has_precis = TRUE;
+                    } else if (width == 5) {
+                        escape_it = TRUE;
                     }
                     argsv = MUTABLE_SV(va_arg(*args, void*));
                     eptr = SvPV_const(argsv, elen);
@@ -12572,7 +12609,9 @@ Perl_sv_vcatpvfn_flags(pTHX_ SV *const sv, const char *const pat, const STRLEN p
                     width = 0;
                     goto string;
                 }
-                else if (width == 2 || width == 3) {	/* HEKf, HEKf256 */
+                else if (width == 2 || width == 3 ||
+                         width == 7 || width == 8)
+                {        /* HEKf, HEKf256, HEKf_QUOTEDPREFIX, HEKf256_QUOTEDPREFIX */
                     HEK * const hek = va_arg(*args, HEK *);
                     eptr = HEK_KEY(hek);
                     elen = HEK_LEN(hek);
@@ -12582,10 +12621,20 @@ Perl_sv_vcatpvfn_flags(pTHX_ SV *const sv, const char *const pat, const STRLEN p
                         precis = 256;
                         has_precis = TRUE;
                     }
+                    if (width > 5)
+                        escape_it = TRUE;
+                    width = 0;
+                    goto string;
+                }
+                else if (width == 1) {
+                    eptr = va_arg(*args,char *);
+                    elen = strlen(eptr);
+                    escape_it = TRUE;
                     width = 0;
                     goto string;
                 }
                 else if (width) {
+                    /* note width=4 or width=9 is handled under %d */
                     Perl_ck_warner_d(aTHX_ packWARN(WARN_INTERNAL),
                          "internal %%<num>p might conflict with future printf extensions");
                 }
@@ -12626,7 +12675,8 @@ Perl_sv_vcatpvfn_flags(pTHX_ SV *const sv, const char *const pat, const STRLEN p
         case 'd':
             /* probably just a plain %d, but it might be the start of the
              * special UTF8f format, which usually looks something like
-             * "%d%lu%4p" (the lu may vary by platform)
+             * "%d%lu%4p" (the lu may vary by platform) or
+             * "%d%lu%9p" for an escaped version.
              */
             assert((UTF8f)[0] == 'd');
             assert((UTF8f)[1] == '%');
@@ -12635,10 +12685,15 @@ Perl_sv_vcatpvfn_flags(pTHX_ SV *const sv, const char *const pat, const STRLEN p
                  && q == fmtstart + 1 /* plain %d, not %....d */
                  && patend >= fmtstart + sizeof(UTF8f) - 1 /* long enough */
                  && *q == '%'
-                 && strnEQ(q + 1, (UTF8f) + 2, sizeof(UTF8f) - 3))
+                 && strnEQ(q + 1, (UTF8f) + 2, sizeof(UTF8f) - 5)
+                 && q[sizeof(UTF8f)-3] == 'p'
+                 && (q[sizeof(UTF8f)-4] == '4' ||
+                     q[sizeof(UTF8f)-4] == '9'))
             {
                 /* The argument has already gone through cBOOL, so the cast
                    is safe. */
+                if (q[sizeof(UTF8f)-4] == '9')
+                    escape_it = TRUE;
                 is_utf8 = (bool)va_arg(*args, int);
                 elen = va_arg(*args, UV);
                 /* if utf8 length is larger than 0x7ffff..., then it might

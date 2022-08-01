@@ -1706,7 +1706,7 @@ Perl_magic_setsig(pTHX_ SV *sv, MAGIC *mg)
             if (sv) {
                 SV *tmp = sv_newmortal();
                 Perl_ck_warner(aTHX_ packWARN(WARN_SIGNAL), "No such signal: SIG%s",
-                                            pv_pretty(tmp, s, len, 0, NULL, NULL, 0));
+                                            pv_pretty(tmp, s, len, 0, NULL, NULL,0));
             }
             return 0;
         }
