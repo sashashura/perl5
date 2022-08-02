@@ -32,6 +32,34 @@
 #ifndef PERL_UTF8_H_      /* Guard against recursive inclusion */
 #define PERL_UTF8_H_ 1
 
+/* Attribute to be applied to a string, giving the state of its representation
+ * w.r.t if it is encoded as UTF-8 or not.
+ *
+ * The following relationships hold between the enum values:
+ *      If the value is:
+ *        <= UTF8NESS_IMMATERIAL       the string may be treated in code as
+ *                                     non-UTF8
+ *        not UTF8NESS_UNKNOWN and is
+ *        >= UTF8NESS_IMMATERIAL       the string may be treated in code as
+ *                                     UTF8
+ */
+typedef enum {
+    UTF8NESS_NO               =  0,  /* Definitely not UTF-8 */
+    UTF8NESS_IMMATERIAL       =  1,  /* Representation is the same in UTF-8 as
+                                        not, so the UTF8ness doesn't actually
+                                        matter */
+#if 0   /* Not enabled at this time */
+    UTF8NESS_YES_NOT_WIDE     =  2   /* Defintely is UTF-8, is convertible to
+                                        all bytes */
+    UTF8NESS_YES_WIDE         =  3   /* Defintely is UTF-8, and has at least
+                                        one character not convertible to a byte
+                                      */
+#endif
+    UTF8NESS_YES              =  4,  /* Defintely is UTF-8, wideness
+                                        unspecified */
+    UTF8NESS_UNKNOWN = (STRLEN) -1,  /* Undetermined so far */
+} utf8ness_t;
+
 /* Use UTF-8 as the default script encoding?
  * Turning this on will break scripts having non-UTF-8 binary
  * data (such as Latin-1) in string literals. */

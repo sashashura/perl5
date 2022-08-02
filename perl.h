@@ -1348,6 +1348,16 @@ violations are fatal.
 #  endif
 #endif
 
+#ifdef PERL_CORE
+
+typedef enum {
+    LOCALE_NOT_UTF8,
+    LOCALE_IS_UTF8,
+    LOCALE_UTF8NESS_UNKNOWN
+} locale_utf8ness_t;
+
+#endif
+
 #include <setjmp.h>
 
 #ifdef I_SYS_PARAM
