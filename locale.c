@@ -119,6 +119,23 @@ static int debug_initialization = 0;
 #  include <wctype.h>
 #endif
 
+PERL_STATIC_INLINE const char *
+S_mortalized_pv_copy(pTHX_ const char * const pv)
+{
+    PERL_ARGS_ASSERT_MORTALIZED_PV_COPY;
+
+    /* Copies the input pv, and arranges for it to be freed at an unspecified
+     * later time. */
+
+    if (pv == NULL) {
+        return NULL;
+    }
+
+    const char * copy = savepv(pv);
+    SAVEFREEPV(copy);
+    return copy;
+}
+
 
 /* Returns the Unix errno portion; ignoring any others.  This is a macro here
  * instead of putting it into perl.h, because unclear to khw what should be
@@ -540,7 +557,10 @@ Perl_locale_panic(const char * msg,
                                  bool_setlocale_c(categories[i], locale)
 #  define bool_setlocale_c(cat, locale)    bool_setlocale_r(cat, locale)
 
-#  define querylocale_r(cat)        setlocale_r(cat, NULL)
+/* All the querylocale...() forms return a mortalized copy.  If you need
+ * something stable across calls, you need to savepv() the result yourself */
+
+#  define querylocale_r(cat)        mortalized_pv_copy(setlocale_r(cat, NULL))
 #  define querylocale_c(cat)        querylocale_r(cat)
 #  define querylocale_i(i)          querylocale_c(categories[i])
 
@@ -574,7 +594,7 @@ Perl_locale_panic(const char * msg,
                                   bool_setlocale_i(cat##_INDEX_, locale)
 #  define bool_setlocale_r(cat, locale)   cBOOL(setlocale_r(cat, locale))
 
-#  define querylocale_i(i)      my_querylocale_i(i)
+#  define querylocale_i(i)      mortalized_pv_copy(my_querylocale_i(i))
 #  define querylocale_c(cat)    querylocale_i(cat##_INDEX_)
 #  define querylocale_r(cat)    querylocale_i(get_category_index(cat,NULL))
 
@@ -590,11 +610,12 @@ Perl_locale_panic(const char * msg,
 #    if ! defined(HAS_QUERYLOCALE) && defined(_NL_LOCALE_NAME)
 #      define querylocale_l(index, locale_obj)                              \
             (QUERYLOCALE_ASSERT(index)                                      \
-             nl_langinfo_l(_NL_LOCALE_NAME(categories[index]), locale_obj))
+             mortalized_pv_copy(nl_langinfo_l(                              \
+                         _NL_LOCALE_NAME(categories[index]), locale_obj)))
 #    else
 #      define querylocale_l(index, locale_obj)                              \
-                           (QUERYLOCALE_ASSERT(index)                       \
-                            querylocale(category_masks[index], locale_obj))
+        (QUERYLOCALE_ASSERT(index)                                          \
+         mortalized_pv_copy(querylocale(category_masks[index], locale_obj)))
 #    endif
 #  endif
 #  if defined(__GLIBC__) && defined(USE_LOCALE_MESSAGES)
@@ -795,7 +816,7 @@ S_setlocale_from_aggregate_LC_ALL(pTHX_ const char * locale, const line_t line)
      * are cases where we have to parse our own constructed aggregates, which use
      * the glibc syntax. */
 
-    const char * locale_on_entry = savepv(querylocale_c(LC_ALL));
+    const char * locale_on_entry = querylocale_c(LC_ALL);
 
     PERL_ARGS_ASSERT_SETLOCALE_FROM_AGGREGATE_LC_ALL;
 
@@ -867,13 +888,10 @@ S_setlocale_from_aggregate_LC_ALL(pTHX_ const char * locale, const line_t line)
                 /* But if we have to back out, do fix up LC_ALL */
                 if (! emulate_setlocale_c(LC_ALL, locale_on_entry, TRUE, line))
                 {
-                    Safefree(locale_on_entry);
                     setlocale_failure_panic_i(i, individ_locale,
                                               locale, __LINE__, line);
                     NOT_REACHED; /* NOTREACHED */
                 }
-
-                Safefree(locale_on_entry);
 
                 /* Reverting to the entry value succeeded, but the operation
                  * failed to go to the requested locale. */
@@ -905,7 +923,6 @@ S_setlocale_from_aggregate_LC_ALL(pTHX_ const char * locale, const line_t line)
 
 #    endif
 
-    Safefree(locale_on_entry);
     return retval;
 }
 
@@ -1083,7 +1100,7 @@ S_emulate_setlocale_i(pTHX_
     if (   (index == LC_MESSAGES_INDEX_ || index == LC_ALL_INDEX_)
         &&  LIKELY(PL_phase != PERL_PHASE_CONSTRUCT))
     {
-        old_messages_locale = savepv(querylocale_c(LC_MESSAGES));
+        old_messages_locale = querylocale_c(LC_MESSAGES);
     }
 
 #  endif
@@ -1188,10 +1205,6 @@ S_emulate_setlocale_i(pTHX_
             }
 #    endif
 
-#    ifdef HAS_GLIBC_LC_MESSAGES_BUG
-            Safefree(old_messages_locale);
-#    endif
-
             return NULL;
         }
 
@@ -1239,8 +1252,6 @@ S_emulate_setlocale_i(pTHX_
         if (strNE(old_messages_locale, my_querylocale_c(LC_MESSAGES))) {
             textdomain(textdomain(NULL));
         }
-
-        Safefree(old_messages_locale);
     }
 
 #  endif
@@ -2092,9 +2103,8 @@ S_new_LC_ALL(pTHX_ const char *unused)
 
     for (i = 0; i < NOMINAL_LC_ALL_INDEX; i++) {
         if (update_functions[i]) {
-            const char * this_locale = savepv(querylocale_i(i));
+            const char * this_locale = querylocale_i(i);
             update_functions[i](aTHX_ this_locale);
-            Safefree(this_locale);
         }
     }
 }
@@ -2533,8 +2543,8 @@ Perl_setlocale(const int category, const char * locale)
 #  ifndef USE_LOCALE_NUMERIC
 
         /* Without LC_NUMERIC, it's trivial; we just return the value */
-        return querylocale_r(category);
-
+        return save_to_buffer(querylocale_r(category),
+                              &PL_setlocale_buf, &PL_setlocale_bufsize, 0);
 #  else
 
         /* We have the LC_NUMERIC name saved, because we are normally switched
@@ -2552,7 +2562,8 @@ Perl_setlocale(const int category, const char * locale)
 #    ifndef LC_ALL
 
         /* Without LC_ALL, just return the value */
-        return querylocale_r(category);
+        return save_to_buffer(querylocale_r(category),
+                              &PL_setlocale_buf, &PL_setlocale_bufsize, 0);
 
 #    else
 
@@ -2561,7 +2572,8 @@ Perl_setlocale(const int category, const char * locale)
          * value), for all the remaining ones (we took care of LC_NUMERIC
          * above), just return the value */
         if (category != LC_ALL) {
-            return querylocale_r(category);
+            return save_to_buffer(querylocale_r(category),
+                                  &PL_setlocale_buf, &PL_setlocale_bufsize, 0);
         }
 
         bool toggled = FALSE;
@@ -2577,16 +2589,14 @@ Perl_setlocale(const int category, const char * locale)
         retval = querylocale_c(LC_ALL);
 
         if (toggled) {
-
-            /* This toggling back could destroy 'retval' */
-            retval = save_to_buffer(retval,
-                                    &PL_setlocale_buf, &PL_setlocale_bufsize, 0);
             set_numeric_standard();
         }
 
         DEBUG_L(PerlIO_printf(Perl_debug_log, "%s\n",
                             setlocale_debug_string_r(category, locale, retval)));
-        return retval;
+
+        return save_to_buffer(retval, &PL_setlocale_buf,
+                                      &PL_setlocale_bufsize, 0);
 
 #    endif      /* Has LC_ALL */
 #  endif        /* Has LC_NUMERIC */
@@ -2594,13 +2604,15 @@ Perl_setlocale(const int category, const char * locale)
     } /* End of querying the current locale */
 
     unsigned int cat_index = get_category_index(category, NULL);
-    retval = save_to_buffer(setlocale_i(cat_index, locale),
-                            &PL_setlocale_buf, &PL_setlocale_bufsize, 0);
+    retval = setlocale_i(cat_index, locale);
     if (! retval) {
         DEBUG_L(PerlIO_printf(Perl_debug_log, "%s\n",
                           setlocale_debug_string_i(cat_index, locale, "NULL")));
         return NULL;
     }
+
+    retval = save_to_buffer(retval,
+                            &PL_setlocale_buf, &PL_setlocale_bufsize, 0);
 
     /* Now that have changed locales, we have to update our records to
      * correspond.  Only certain categories have extra work to update. */
@@ -2991,9 +3003,9 @@ S_my_nl_langinfo(const int item, bool toggle)
                  * We have to use LC_ALL instead of LC_MONETARY because of
                  * another bug in Windows */
 
-        save_thread = savepv(querylocale_c(LC_ALL));
+        save_thread = querylocale_c(LC_ALL);
                 _configthreadlocale(_DISABLE_PER_THREAD_LOCALE);
-        save_global= savepv(querylocale_c(LC_ALL));
+        save_global= querylocale_c(LC_ALL);
         void_setlocale_c(LC_ALL, save_thread);
 
 #    endif
@@ -3030,8 +3042,6 @@ S_my_nl_langinfo(const int item, bool toggle)
         void_setlocale_c(LC_ALL, save_global);
                 _configthreadlocale(_ENABLE_PER_THREAD_LOCALE);
         void_setlocale_c(LC_ALL, save_thread);
-                Safefree(save_global);
-                Safefree(save_thread);
 
 #    endif
 
@@ -3118,9 +3128,9 @@ S_my_nl_langinfo(const int item, bool toggle)
                 /* This should only be for the thousands separator.  A
                  * different work around would be to use GetNumberFormat on a
                  * known value and parse the result to find the separator */
-        save_thread = savepv(querylocale_c(LC_ALL));
+        save_thread = querylocale_c(LC_ALL);
                 _configthreadlocale(_DISABLE_PER_THREAD_LOCALE);
-        save_global = savepv(querylocale_c(LC_ALL));
+        save_global = querylocale_c(LC_ALL);
         void_setlocale_c(LC_ALL, save_thread);
 #      if 0
                 /* This is the start of code that for broken Windows replaces
@@ -3160,8 +3170,6 @@ S_my_nl_langinfo(const int item, bool toggle)
         void_setlocale_c(LC_ALL, save_global);
                 _configthreadlocale(_ENABLE_PER_THREAD_LOCALE);
         void_setlocale_c(LC_ALL, save_thread);
-                Safefree(save_global);
-                Safefree(save_thread);
 
 #    endif
 
@@ -4810,11 +4818,6 @@ Perl__is_cur_LC_category_utf8(pTHX_ int category)
 
     /* Get the desired category's locale */
     save_input_locale = querylocale_r(category);
-    if (! save_input_locale) {
-        locale_panic_(Perl_form(aTHX_ "Could not find current %s locale",
-                                      category_name(category)));
-    }
-    save_input_locale = savepv(save_input_locale);
 
     DEBUG_L(PerlIO_printf(Perl_debug_log,
                           "Current locale for %s is %s\n",
@@ -4865,7 +4868,6 @@ Perl__is_cur_LC_category_utf8(pTHX_ int category)
 
         /* free only when not using the buffer */
         if ( delimited != buffer ) Safefree(delimited);
-        Safefree(save_input_locale);
         return is_utf8;
     }
 
@@ -5370,7 +5372,6 @@ Perl__is_cur_LC_category_utf8(pTHX_ int category)
 
     /* free only when not using the buffer */
     if ( delimited != buffer ) Safefree(delimited);
-    Safefree(save_input_locale);
     return is_utf8;
 }
 
@@ -5428,12 +5429,11 @@ Perl_my_strerror(pTHX_ const int errnum)
         errstr = savepv(Strerror(errnum));
     }
     else {
-        const char * save_locale = savepv(querylocale_c(LC_MESSAGES));
+        const char * save_locale = querylocale_c(LC_MESSAGES);
 
         void_setlocale_c(LC_MESSAGES, "C");
         errstr = savepv(Strerror(errnum));
         void_setlocale_c(LC_MESSAGES, save_locale);
-        Safefree(save_locale);
     }
 
 #  elif defined(USE_POSIX_2008_LOCALE) && defined(HAS_STRERROR_L)
@@ -5710,29 +5710,26 @@ Perl_sync_locale()
 #  endif
 #  ifdef USE_LOCALE_CTYPE
 
-    newlocale = savepv(querylocale_c(LC_CTYPE));
+    newlocale = querylocale_c(LC_CTYPE);
     DEBUG_Lv(PerlIO_printf(Perl_debug_log,
                   "%s\n", setlocale_debug_string_c(LC_CTYPE, NULL, newlocale)));
     new_ctype(newlocale);
-    Safefree(newlocale);
 
 #  endif /* USE_LOCALE_CTYPE */
 #  ifdef USE_LOCALE_COLLATE
 
-    newlocale = savepv(querylocale_c(LC_COLLATE));
+    newlocale = querylocale_c(LC_COLLATE);
     DEBUG_Lv(PerlIO_printf(Perl_debug_log,
                 "%s\n", setlocale_debug_string_c(LC_COLLATE, NULL, newlocale)));
     new_collate(newlocale);
-    Safefree(newlocale);
 
 #  endif
 #  ifdef USE_LOCALE_NUMERIC
 
-    newlocale = savepv(querylocale_c(LC_NUMERIC));
+    newlocale = querylocale_c(LC_NUMERIC);
     DEBUG_Lv(PerlIO_printf(Perl_debug_log,
                 "%s\n", setlocale_debug_string_c(LC_NUMERIC, NULL, newlocale)));
     new_numeric(newlocale);
-    Safefree(newlocale);
 
 #  endif /* USE_LOCALE_NUMERIC */
 
