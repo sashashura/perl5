@@ -1170,6 +1170,7 @@ PERL_CALLCONV OP *	Perl_doref(pTHX_ OP *o, I32 type, bool set_op_ref);
 PERL_CALLCONV void	Perl_dounwind(pTHX_ I32 cxix);
 #define PERL_ARGS_ASSERT_DOUNWIND
 PERL_CALLCONV U8	Perl_dowantarray(pTHX)
+			__attribute__deprecated__
 			__attribute__warn_unused_result__;
 #define PERL_ARGS_ASSERT_DOWANTARRAY
 
