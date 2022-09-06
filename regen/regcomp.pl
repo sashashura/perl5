@@ -586,37 +586,40 @@ EOP
     my $REG_EXTFLAGS_NAME_SIZE= 0;
     foreach my $file ( "op_reg_common.h", "regexp.h" ) {
         open my $in_fh, "<", $file or die "Can't read '$file': $!";
-        while (<$in_fh>) {
-
+        while (defined(my $line= <$in_fh>)) {
+            chomp($line);
+            while ($line=~s/\\\z/ / and defined(my $next_line= <$in_fh>)) {
+                chomp($next_line);
+                $line .= $next_line;
+            }
             # optional leading '_'.  Return symbol in $1, and strip it from
             # comment of line.  Currently doesn't handle comments running onto
             # next line
-            if (s/^ \# \s* define \s+ ( _? RXf_ \w+ ) \s+ //xi) {
-                chomp;
+            if ($line=~s/^ \# \s* define \s+ ( _? RXf_ \w+ ) \s+ //xi) {
                 my $define= $1;
-                my $orig= $_;
-                s{ /\* .*? \*/ }{ }x;    # Replace comments by a blank
+                my $orig= $line;
+                $line =~ s{ /\* .*? \*/ }{ }x;    # Replace comments by a blank
 
                 # Replace any prior defined symbols by their values
                 foreach my $key ( keys %definitions ) {
-                    s/\b$key\b/$definitions{$key}/g;
+                    $line =~ s/\b$key\b/$definitions{$key}/g;
                 }
 
                 # Remove the U suffix from unsigned int literals
-                s/\b([0-9]+)U\b/$1/g;
+                $line =~ s/\b([0-9]+)U\b/$1/g;
 
-                my $newval= eval $_;     # Get numeric definition
+                my $newval= eval $line;     # Get numeric definition
 
                 $definitions{$define}= $newval;
 
-                next unless $_ =~ /<</;    # Bit defines use left shift
+                next unless $line =~ /<</;    # Bit defines use left shift
                 if ( $val & $newval ) {
                     my @names= ( $define, $reverse{$newval} );
                     s/PMf_// for @names;
                     if ( $names[0] ne $names[1] ) {
-                        die sprintf
-                            "ERROR: both $define and $reverse{$newval} use 0x%08X (%s:%s)",
-                            $newval, $orig, $_;
+                        die sprintf "ERROR: both %s and %s use 0x%08X (%s:%s)",
+                            $define, $reverse{$newval},
+                            $newval, $orig, $line;
                     }
                     next;
                 }
@@ -691,16 +694,20 @@ EOP
     my %reverse;
     my $REG_INTFLAGS_NAME_SIZE= 0;
     foreach my $file ("regcomp.h") {
-        open my $fh, "<", $file or die "Can't read $file: $!";
-        while (<$fh>) {
+        open my $in_fh, "<", $file or die "Can't read $file: $!";
+        while (defined(my $line=<$in_fh>)) {
+            chomp($line);
+            while ($line=~s/\\\z/ / and defined(my $next_line= <$in_fh>)) {
+                chomp($next_line);
+                $line .= $next_line;
+            }
 
             # optional leading '_'.  Return symbol in $1, and strip it from
             # comment of line
             if (
-                m/^ \# \s* define \s+ ( PREGf_ ( \w+ ) ) \s+ 0x([0-9a-f]+)(?:\s*\/\*(.*)\*\/)?/xi
-                )
-            {
-                chomp;
+                $line =~ m/^ \# \s* define \s+ ( PREGf_ ( \w+ ) ) \s+
+                             0x([0-9a-f]+)(?:\s*\/\*(.*)\*\/)?/xi
+            ){
                 my $define= $1;
                 my $abbr= $2;
                 my $hex= $3;
