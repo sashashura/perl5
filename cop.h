@@ -510,18 +510,15 @@ string C<p>, creating the package if necessary.
 
 #  define CopFILE(c)              ((c)->cop_file)
 #  define CopFILEGV(c)  \
-       (CopFILE(c)      \
-        ? gv_fetchfile(CopFILE(c)) : NULL)
+       (CopFILE(c) ? gv_fetchfile(CopFILE(c)) : NULL)
 
 #  define CopFILE_set(c,pv)       ((c)->cop_file = savesharedpv(pv))
 #  define CopFILE_setn(c,pv,l)    ((c)->cop_file = savesharedpvn((pv),(l)))
 
 #  define CopFILESV(c)  \
-       (CopFILE(c)      \
-        ? GvSV(gv_fetchfile(CopFILE(c))) : NULL)
+       (CopFILE(c) ? GvSV(gv_fetchfile(CopFILE(c))) : NULL)
 #  define CopFILEAV(c)  \
-       (CopFILE(c)      \
-        ? GvAV(gv_fetchfile(CopFILE(c))) : NULL)
+       (CopFILE(c) ? GvAV(gv_fetchfile(CopFILE(c))) : NULL)
 #  define CopFILEAVx(c)     \
        (assert_(CopFILE(c)) \
           GvAV(gv_fetchfile(CopFILE(c))))
@@ -1053,22 +1050,17 @@ struct context {
 #define CXp_ONCE    0x10    /* What was sbu_once in struct subst */
 
 #define CxTYPE(c)           ((c)->cx_type & CXTYPEMASK)
-#define CxTYPE_is_LOOP(c)           \
-    (   CxTYPE(cx) >= CXt_LOOP_ARY  \
-     && CxTYPE(cx) <= CXt_LOOP_PLAIN)
+#define CxTYPE_is_LOOP(c)   \
+    (   CxTYPE(cx) >= CXt_LOOP_ARY && CxTYPE(cx) <= CXt_LOOP_PLAIN)
 #define CxMULTICALL(c)      ((c)->cx_type & CXp_MULTICALL)
-#define CxREALEVAL(c)                       \
-    (((c)->cx_type & (CXTYPEMASK|CXp_REAL)) \
-     == (CXt_EVAL|CXp_REAL))
-#define CxEVALBLOCK(c)                              \
-    (((c)->cx_type & (CXTYPEMASK|CXp_EVALBLOCK))    \
-     == (CXt_EVAL|CXp_EVALBLOCK))
-#define CxTRY(c)                            \
-    (((c)->cx_type & (CXTYPEMASK|CXp_TRY))  \
-     == (CXt_EVAL|CXp_TRY))
-#define CxFOREACH(c)                \
-    (   CxTYPE(cx) >= CXt_LOOP_ARY  \
-     && CxTYPE(cx) <= CXt_LOOP_LIST)
+#define CxREALEVAL(c)   \
+    (((c)->cx_type & (CXTYPEMASK|CXp_REAL)) == (CXt_EVAL|CXp_REAL))
+#define CxEVALBLOCK(c)  \
+    (((c)->cx_type & (CXTYPEMASK|CXp_EVALBLOCK)) == (CXt_EVAL|CXp_EVALBLOCK))
+#define CxTRY(c)    \
+    (((c)->cx_type & (CXTYPEMASK|CXp_TRY)) == (CXt_EVAL|CXp_TRY))
+#define CxFOREACH(c)    \
+    (   CxTYPE(cx) >= CXt_LOOP_ARY && CxTYPE(cx) <= CXt_LOOP_LIST)
 
 /* private flags for CXt_DEFER */
 #define CXp_FINALLY     0x20    /* `finally` block; semantically identical

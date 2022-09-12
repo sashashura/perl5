@@ -436,13 +436,11 @@ perform the upgrade if necessary.  See C<L</svtype>>.
 
 
 
-#define SVf_THINKFIRST                          \
-    (SVf_READONLY|SVf_PROTECT|SVf_ROK|SVf_FAKE  \
-    |SVs_RMG|SVf_IsCOW)
+#define SVf_THINKFIRST  \
+    (SVf_READONLY|SVf_PROTECT|SVf_ROK|SVf_FAKE |SVs_RMG|SVf_IsCOW)
 
-#define SVf_OK                          \
-    (SVf_IOK|SVf_NOK|SVf_POK|SVf_ROK|   \
-     SVp_IOK|SVp_NOK|SVp_POK|SVpgv_GP)
+#define SVf_OK  \
+    (SVf_IOK|SVf_NOK|SVf_POK|SVf_ROK| SVp_IOK|SVp_NOK|SVp_POK|SVpgv_GP)
 
 #define PRIVSHIFT                    4  /* (SVp_?OK >> PRIVSHIFT) == SVf_?OK */
 
@@ -931,9 +929,8 @@ Set the size of the string buffer for the SV. See C<L</SvLEN>>.
 
 #define SvNIOK(sv)                          (SvFLAGS(sv) & (SVf_IOK|SVf_NOK))
 #define SvNIOKp(sv)                         (SvFLAGS(sv) & (SVp_IOK|SVp_NOK))
-#define SvNIOK_off(sv)                  \
-    (SvFLAGS(sv) &= ~(SVf_IOK|SVf_NOK|  \
-                      SVp_IOK|SVp_NOK|SVf_IVisUV))
+#define SvNIOK_off(sv)  \
+    (SvFLAGS(sv) &= ~(SVf_IOK|SVf_NOK| SVp_IOK|SVp_NOK|SVf_IVisUV))
 
 #define assert_not_ROK(sv)                  assert_(!SvROK(sv) || !SvRV(sv))
 #define assert_not_glob(sv)                 assert_(!isGV_with_GP(sv))
@@ -968,19 +965,16 @@ Set the size of the string buffer for the SV. See C<L</SvLEN>>.
         SvFLAGS(sv) |= (SVf_IOK|SVp_IOK))
 #define SvIOK_off(sv)                       (SvFLAGS(sv) &= ~(SVf_IOK|SVp_IOK|SVf_IVisUV))
 #define SvIOK_only(sv)  \
-    (SvOK_off(sv),      \
-        SvFLAGS(sv) |= (SVf_IOK|SVp_IOK))
+    (SvOK_off(sv), SvFLAGS(sv) |= (SVf_IOK|SVp_IOK))
 #define SvIOK_only_UV(sv)                       \
     (assert_not_glob(sv) SvOK_off_exc_UV(sv),   \
         SvFLAGS(sv) |= (SVf_IOK|SVp_IOK))
 
-#define SvIOK_UV(sv)                        \
-    ((SvFLAGS(sv) & (SVf_IOK|SVf_IVisUV))   \
-     == (SVf_IOK|SVf_IVisUV))
+#define SvIOK_UV(sv)    \
+    ((SvFLAGS(sv) & (SVf_IOK|SVf_IVisUV)) == (SVf_IOK|SVf_IVisUV))
 #define SvUOK(sv)                           SvIOK_UV(sv)
-#define SvIOK_notUV(sv)                     \
-    ((SvFLAGS(sv) & (SVf_IOK|SVf_IVisUV))   \
-     == SVf_IOK)
+#define SvIOK_notUV(sv) \
+    ((SvFLAGS(sv) & (SVf_IOK|SVf_IVisUV)) == SVf_IOK)
 
 #define SvIandPOK(sv)   \
     ((SvFLAGS(sv) & (SVf_IOK|SVf_POK)) == (SVf_IOK|SVf_POK))
@@ -996,11 +990,9 @@ Set the size of the string buffer for the SV. See C<L</SvLEN>>.
     (SvIsCOW_static(sv) &&              \
         (SvPVX_const(sv) == PL_Yes || SvPVX_const(sv) == PL_No))
 #define BOOL_INTERNALS_sv_isbool_true(sv)   \
-    (SvIsCOW_static(sv) &&                  \
-        (SvPVX_const(sv) == PL_Yes))
+    (SvIsCOW_static(sv) && (SvPVX_const(sv) == PL_Yes))
 #define BOOL_INTERNALS_sv_isbool_false(sv)  \
-    (SvIsCOW_static(sv) &&                  \
-        (SvPVX_const(sv) == PL_No))
+    (SvIsCOW_static(sv) && (SvPVX_const(sv) == PL_No))
 
 #define SvIsUV(sv)                          (SvFLAGS(sv) & SVf_IVisUV)
 #define SvIsUV_on(sv)                       (SvFLAGS(sv) |= SVf_IVisUV)
@@ -1012,8 +1004,7 @@ Set the size of the string buffer for the SV. See C<L</SvLEN>>.
      SvFLAGS(sv) |= (SVf_NOK|SVp_NOK))
 #define SvNOK_off(sv)                       (SvFLAGS(sv) &= ~(SVf_NOK|SVp_NOK))
 #define SvNOK_only(sv)  \
-    (SvOK_off(sv),      \
-        SvFLAGS(sv) |= (SVf_NOK|SVp_NOK))
+    (SvOK_off(sv), SvFLAGS(sv) |= (SVf_NOK|SVp_NOK))
 
 /*
 =for apidoc Am|U32|SvUTF8|SV* sv
@@ -1063,8 +1054,7 @@ in gv.h: */
         SvFLAGS(sv) |= (SVf_POK|SVp_POK))
 
 #define SvVOK(sv)   \
-    (SvMAGICAL(sv)  \
-     && mg_find(sv,PERL_MAGIC_vstring))
+    (SvMAGICAL(sv) && mg_find(sv,PERL_MAGIC_vstring))
 /*
 =for apidoc Am|MAGIC*|SvVSTRING_mg|SV * sv
 
@@ -1073,8 +1063,7 @@ Returns the vstring magic, or NULL if none
 =cut
 */
 #define SvVSTRING_mg(sv)    \
-    (SvMAGICAL(sv)          \
-     ? mg_find(sv,PERL_MAGIC_vstring) : NULL)
+    (SvMAGICAL(sv) ? mg_find(sv,PERL_MAGIC_vstring) : NULL)
 
 #define SvOOK(sv)                           (SvFLAGS(sv) & SVf_OOK)
 #define SvOOK_on(sv)                        (SvFLAGS(sv) |= SVf_OOK)
@@ -1123,9 +1112,8 @@ not.
 =cut
 */
 
-#define SvAMAGIC(sv)                    \
-    (SvROK(sv) && SvOBJECT(SvRV(sv)) && \
-     HvAMAGIC(SvSTASH(SvRV(sv))))
+#define SvAMAGIC(sv)    \
+    (SvROK(sv) && SvOBJECT(SvRV(sv)) && HvAMAGIC(SvSTASH(SvRV(sv))))
 
 /* To be used on the stashes themselves: */
 #define HvAMAGIC(hv)                        (SvFLAGS(hv) & SVf_AMAGIC)
@@ -1201,9 +1189,8 @@ the scalar's value cannot change unless written to.
         ? 1                                     \
         : (HvAMAGIC_off(stash), 0))
 
-#define SvWEAKREF(sv)                           \
-    ((SvFLAGS(sv) & (SVf_ROK|SVprv_WEAKREF))    \
-      == (SVf_ROK|SVprv_WEAKREF))
+#define SvWEAKREF(sv)   \
+    ((SvFLAGS(sv) & (SVf_ROK|SVprv_WEAKREF)) == (SVf_ROK|SVprv_WEAKREF))
 #define SvWEAKREF_on(sv)                    (SvFLAGS(sv) |=  (SVf_ROK|SVprv_WEAKREF))
 #define SvWEAKREF_off(sv)                   (SvFLAGS(sv) &= ~(SVf_ROK|SVprv_WEAKREF))
 
@@ -2413,8 +2400,7 @@ properly null terminated. Equivalent to sv_setpvs(""), but more efficient.
 
 /* the SvREADONLY() test is to quickly reject most SVs */
 #define SvIMMORTAL(sv)  \
-    (  SvREADONLY(sv)   \
-    && (SvIMMORTAL_INTERP(sv) || (sv) == &PL_sv_placeholder))
+    (  SvREADONLY(sv) && (SvIMMORTAL_INTERP(sv) || (sv) == &PL_sv_placeholder))
 
 #ifdef DEBUGGING
    /* exercise the immortal resurrection code in sv_free2() */
