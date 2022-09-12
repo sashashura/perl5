@@ -21,26 +21,26 @@ typedef SSize_t PADOFFSET; /* signed so that -1 is a valid value */
  */
 
 struct padlist {
-    SSize_t     xpadl_max;      /* max index for which array has space */
+    SSize_t xpadl_max;      /* max index for which array has space */
     union {
-        PAD **  xpadlarr_alloc; /* Pointer to beginning of array of AVs.
-                                   Note that a 'padnamelist *' is stored
-                                   in the 0 index of the AV. */
+        PAD     **xpadlarr_alloc;   /* Pointer to beginning of array of AVs.
+                                       Note that a 'padnamelist *' is stored
+                                       in the 0 index of the AV. */
         struct {
-            PADNAMELIST * padnl;
-            PAD * pad_1;        /* this slice of PAD * array always alloced */
-            PAD * pad_2;        /* maybe unalloced */
-        } * xpadlarr_dbg;       /* for use with a C debugger only */
-    } xpadl_arr;
-    U32         xpadl_id;       /* Semi-unique ID, shared between clones */
-    U32         xpadl_outid;    /* ID of outer pad */
+            PADNAMELIST *padnl;
+            PAD         *pad_1; /* this slice of PAD * array always alloced */
+            PAD         *pad_2; /* maybe unalloced */
+        }       *xpadlarr_dbg;       /* for use with a C debugger only */
+    }       xpadl_arr;
+    U32     xpadl_id;       /* Semi-unique ID, shared between clones */
+    U32     xpadl_outid;    /* ID of outer pad */
 };
 
 struct padnamelist {
-    SSize_t     xpadnl_fill;    /* max index in use */
-    PADNAME **  xpadnl_alloc;   /* pointer to beginning of array */
-    SSize_t     xpadnl_max;     /* max index for which array has space */
-    PADOFFSET   xpadnl_max_named; /* highest index with len > 0 */
+    SSize_t     xpadnl_fill;        /* max index in use */
+    PADNAME     **xpadnl_alloc;     /* pointer to beginning of array */
+    SSize_t     xpadnl_max;         /* max index for which array has space */
+    PADOFFSET   xpadnl_max_named;   /* highest index with len > 0 */
     U32         xpadnl_refcnt;
 };
 
@@ -77,9 +77,9 @@ struct padname_with_str {
 #ifdef PERL_PADNAME_MINIMAL
     _PADNAME_BASE;
 #else
-    struct padname      xpadn_padname;
+    struct padname  xpadn_padname;
 #endif
-    char                xpadn_str[1];
+    char            xpadn_str[1];
 };
 
 #undef _PADNAME_BASE
