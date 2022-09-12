@@ -1,11 +1,10 @@
 /*    thread.h
  *
- *    Copyright (C) 1999, 2000, 2001, 2002, 2003, 2004, 2005, 2006,
- *    by Larry Wall and others
+ *    Copyright (C) 1999, 2000, 2001, 2002, 2003, 2004, 2005, 2006, by Larry
+ *    Wall and others
  *
  *    You may distribute under the terms of either the GNU General Public
  *    License or the Artistic License, as specified in the README file.
- *
  */
 
 #if defined(USE_ITHREADS)
@@ -162,8 +161,8 @@
 #  elif defined(HAS_SCHED_YIELD)
 #    define YIELD   sched_yield()
 #  elif defined(HAS_PTHREAD_YIELD)
-    /* pthread_yield(NULL) platforms are expected
-     * to have #defined YIELD for themselves. */
+    /* pthread_yield(NULL) platforms are expected to have #defined YIELD for
+     * themselves. */
 #    define YIELD   pthread_yield()
 #  endif
 #endif
@@ -272,15 +271,15 @@
 #if defined(MUTEX_LOCK) && defined(MUTEX_UNLOCK)    \
     && defined(COND_SIGNAL) && defined(COND_WAIT)
 
-/* These emulate native many-reader/1-writer locks.
- * Basically a locking reader just locks the semaphore long enough to increment
- * a counter; and similarly decrements it when when through.  Any writer will
- * run only when the count of readers is 0.  That is because it blocks on that
- * semaphore (doing a COND_WAIT) until it gets control of it, which won't
- * happen unless the count becomes 0.  ALL readers and other writers are then
- * blocked until it releases the semaphore.  The reader whose unlocking causes
- * the count to become 0 signals any waiting writers, and the system guarantees
- * that only one gets control at a time */
+/* These emulate native many-reader/1-writer locks. Basically a locking reader
+ * just locks the semaphore long enough to increment a counter; and similarly
+ * decrements it when when through. Any writer will run only when the count of
+ * readers is 0. That is because it blocks on that semaphore (doing a
+ * COND_WAIT) until it gets control of it, which won't happen unless the count
+ * becomes 0. ALL readers and other writers are then blocked until it releases
+ * the semaphore. The reader whose unlocking causes the count to become 0
+ * signals any waiting writers, and the system guarantees that only one gets
+ * control at a time */
 
 #  define PERL_READ_LOCK(mutex)             \
        STMT_START {                         \
@@ -361,12 +360,13 @@
        } STMT_END
 #endif /* JOIN */
 
-/* Use an unchecked fetch of thread-specific data instead of a checked one.
- * It would fail if the key were bogus, but if the key were bogus then
- * Really Bad Things would be happening anyway. --dan */
+/* Use an unchecked fetch of thread-specific data instead of a checked one. It
+ * would fail if the key were bogus, but if the key were bogus then Really Bad
+ * Things would be happening anyway. --dan */
 #if (defined(__ALPHA) && (__VMS_VER >= 70000000)) ||    \
     (defined(__alpha) && defined(__osf__) && !defined(__GNUC__)) /* Available
-                                                               only on >= 4.0 */
+                                                                    only on >=
+                                                                    4.0 */
 #  define HAS_PTHREAD_UNCHECKED_GETSPECIFIC_NP    /* Configure test needed */
 #endif
 
@@ -377,15 +377,15 @@
 #endif
 
 #if defined(PERL_THREAD_LOCAL) && !defined(PERL_GET_CONTEXT) && !defined(PERL_SET_CONTEXT) && !defined(__cplusplus)
-/* Use C11 thread-local storage, where possible.
- * Frustratingly we can't use it for C++ extensions, C++ and C disagree on the
- * syntax used for thread local storage, meaning that the working token that
- * Configure probed for C turns out to be a compiler error on C++. Great.
- * (Well, unless one or both is supporting non-standard syntax as an extension)
- * As Configure doesn't have a way to probe for C++ dialects, we just take the
- * safe option and do the same as 5.34.0 and earlier - use pthreads on C++.
- * Of course, if C++ XS extensions really want to avoid *all* this overhead,
- * they should #define PERL_NO_GET_CONTEXT and pass aTHX/aTHX_ explicitly) */
+/* Use C11 thread-local storage, where possible. Frustratingly we can't use it
+ * for C++ extensions, C++ and C disagree on the syntax used for thread local
+ * storage, meaning that the working token that Configure probed for C turns
+ * out to be a compiler error on C++. Great. (Well, unless one or both is
+ * supporting non-standard syntax as an extension) As Configure doesn't have a
+ * way to probe for C++ dialects, we just take the safe option and do the same
+ * as 5.34.0 and earlier - use pthreads on C++. Of course, if C++ XS extensions
+ * really want to avoid *all* this overhead, they should #define
+ * PERL_NO_GET_CONTEXT and pass aTHX/aTHX_ explicitly) */
 #  define PERL_USE_THREAD_LOCAL
 extern PERL_THREAD_LOCAL void *PL_current_context;
 
@@ -411,9 +411,9 @@ extern PERL_THREAD_LOCAL void *PL_current_context;
 
 /* For C++ extensions built on a system where the C compiler provides thread
  * local storage that call PERL_SET_CONTEXT() also need to set
- * PL_current_context, so need to call into C code to do this.
- * To avoid exploding code complexity, do this also on C platforms that don't
- * support thread local storage. PERL_SET_CONTEXT is not called that often. */
+ * PL_current_context, so need to call into C code to do this. To avoid
+ * exploding code complexity, do this also on C platforms that don't support
+ * thread local storage. PERL_SET_CONTEXT is not called that often. */
 
 #  ifndef PERL_SET_CONTEXT
 #    define PERL_SET_CONTEXT(t)     Perl_set_context((void*)t)
@@ -534,4 +534,4 @@ extern PERL_THREAD_LOCAL void *PL_current_context;
 
 /*
  * ex: set ts=8 sts=4 sw=4 et:
- */
+*/

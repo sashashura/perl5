@@ -67,8 +67,8 @@
 #define ROTL32(x,r)                             _rotl(x,r)
 #define ROTR32(x,r)                             _rotr(x,r)
 #else
-/* gcc recognises this code and generates a
-   rotate instruction for CPUs with one */
+/* gcc recognises this code and generates a rotate instruction for CPUs with
+   one */
 #define ROTL32(x,r)                             (((U32)(x) << (r)) | ((U32)(x) >> (32 - (r))))
 #define ROTR32(x,r)                             (((U32)(x) << (32 - (r))) | ((U32)(x) >> (r)))
 #endif
@@ -1430,8 +1430,8 @@ SBOX32_STATIC_INLINE void sbox32_seed_state128 (
     if (!s2) s2 = 4;
     if (!s3) s3 = 8;
 
-    /* Do a bunch of mix rounds to avalanche the seedbits
-     * before we use them for the XORSHIFT rng. */
+    /* Do a bunch of mix rounds to avalanche the seedbits before we use them
+     * for the XORSHIFT rng. */
     for ( i = 0; i < SBOX32_CHURN_ROUNDS; i++ )
         SBOX32_MIX4(s0,s1,s2,s3,"SEED STATE");
 

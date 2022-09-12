@@ -1,7 +1,6 @@
-/* This is SipHash by Jean-Philippe Aumasson and Daniel J. Bernstein.
- * The authors claim it is relatively secure compared to the alternatives
- * and that performance wise it is a suitable hash for languages like Perl.
- * See:
+/* This is SipHash by Jean-Philippe Aumasson and Daniel J. Bernstein. The
+ * authors claim it is relatively secure compared to the alternatives and that
+ * performance wise it is a suitable hash for languages like Perl. See:
  *
  * https://www.131002.net/siphash/
  *

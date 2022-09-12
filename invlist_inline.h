@@ -1,6 +1,7 @@
 /*    invlist_inline.h
  *
- *    Copyright (C) 2012 by Larry Wall and others
+ *    Copyright (C) 2012, 2013, 2014, 2015, 2016, 2017, 2018, 2019, 2020, 2021,
+ *    2022 by Larry Wall and others
  *
  *    You may distribute under the terms of either the GNU General Public
  *    License or the Artistic License, as specified in the README file.
@@ -74,20 +75,19 @@ S__invlist_contains_cp(SV* const invlist, const UV cp)
 PERL_STATIC_INLINE UV*
 S_invlist_array(SV* const invlist)
 {
-    /* Returns the pointer to the inversion list's array.  Every time the
-     * length changes, this needs to be called in case malloc or realloc moved
-     * it */
+    /* Returns the pointer to the inversion list's array. Every time the length
+     * changes, this needs to be called in case malloc or realloc moved it */
 
     PERL_ARGS_ASSERT_INVLIST_ARRAY;
 
-    /* Must not be empty.  If these fail, you probably didn't check for <len>
+    /* Must not be empty. If these fail, you probably didn't check for <len>
      * being non-zero before trying to get the array */
     assert(_invlist_len(invlist));
 
     /* The very first element always contains zero, The array begins either
-     * there, or if the inversion list is offset, at the element after it.
-     * The offset header field determines which; it contains 0 or 1 to indicate
-     * how much additionally to add */
+     * there, or if the inversion list is offset, at the element after it. The
+     * offset header field determines which; it contains 0 or 1 to indicate how
+     * much additionally to add */
     assert(0 == *(SvPVX(invlist)));
     return ((UV *) SvPVX(invlist) + *get_invlist_offset_addr(invlist));
 }
@@ -134,9 +134,9 @@ S_add_cp_to_invlist(pTHX_ SV* invlist, const UV cp) {
 PERL_STATIC_INLINE UV
 S_invlist_highest(SV* const invlist)
 {
-    /* Returns the highest code point that matches an inversion list.  This API
+    /* Returns the highest code point that matches an inversion list. This API
      * has an ambiguity, as it returns 0 under either the highest is actually
-     * 0, or if the list is empty.  If this distinction matters to you, check
+     * 0, or if the list is empty. If this distinction matters to you, check
      * for emptiness before calling this function */
 
     UV len = _invlist_len(invlist);
@@ -151,9 +151,9 @@ S_invlist_highest(SV* const invlist)
     array = invlist_array(invlist);
 
     /* The last element in the array in the inversion list always starts a
-     * range that goes to infinity.  That range may be for code points that are
+     * range that goes to infinity. That range may be for code points that are
      * matched in the inversion list, or it may be for ones that aren't
-     * matched.  In the latter case, the highest code point in the set is one
+     * matched. In the latter case, the highest code point in the set is one
      * less than the beginning of this range; otherwise it is the final element
      * of this range: infinity */
     return (ELEMENT_RANGE_MATCHES_INVLIST(len - 1))
@@ -166,9 +166,9 @@ S_invlist_highest(SV* const invlist)
 PERL_STATIC_INLINE UV
 S_invlist_highest_range_start(SV* const invlist)
 {
-    /* Returns the lowest code point of the highest range in the inversion
-     * list parameter.  This API has an ambiguity: it returns 0 either when
-     * the lowest such point is actually 0 or when the list is empty.  If this
+    /* Returns the lowest code point of the highest range in the inversion list
+     * parameter. This API has an ambiguity: it returns 0 either when the
+     * lowest such point is actually 0 or when the list is empty. If this
      * distinction matters to you, check for emptiness before calling this
      * function. */
 
@@ -184,10 +184,10 @@ S_invlist_highest_range_start(SV* const invlist)
     array = invlist_array(invlist);
 
     /* The last element in the array in the inversion list always starts a
-     * range that goes to infinity.  That range may be for code points that are
+     * range that goes to infinity. That range may be for code points that are
      * matched in the inversion list, or it may be for ones that aren't
-     * matched.  In the first case, the lowest code point in the matching range
-     * is that the one that started the range.  If the other case, the final
+     * matched. In the first case, the lowest code point in the matching range
+     * is that the one that started the range. If the other case, the final
      * matching range begins at the next element down (which may be 0 in the
      * edge case). */
     return (ELEMENT_RANGE_MATCHES_INVLIST(len - 1))
@@ -225,11 +225,11 @@ S_invlist_iterinit(SV* invlist) /* Initialize iterator for invlist */
 PERL_STATIC_INLINE void
 S_invlist_iterfinish(SV* invlist)
 {
-    /* Terminate iterator for invlist.  This is to catch development errors.
-     * Any iteration that is interrupted before completed should call this
-     * function.  Functions that add code points anywhere else but to the end
-     * of an inversion list assert that they are not in the middle of an
-     * iteration.  If they were, the addition would make the iteration
+    /* Terminate iterator for invlist. This is to catch development errors. Any
+     * iteration that is interrupted before completed should call this
+     * function. Functions that add code points anywhere else but to the end of
+     * an inversion list assert that they are not in the middle of an
+     * iteration. If they were, the addition would make the iteration
      * problematical: if the iteration hadn't reached the place where things
      * were being added, it would be ok */
 
@@ -244,7 +244,7 @@ S_invlist_iternext(SV* invlist, UV* start, UV* end)
     /* An C<invlist_iterinit> call on <invlist> must be used to set this up.
      * This call sets in <*start> and <*end>, the next range in <invlist>.
      * Returns <TRUE> if successful and the next call will return the next
-     * range; <FALSE> if was already at the end of the list.  If the latter,
+     * range; <FALSE> if was already at the end of the list. If the latter,
      * <*start> and <*end> are unchanged, and the next call to this function
      * will start over at the beginning of the list */
 

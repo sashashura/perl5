@@ -1,11 +1,11 @@
 /*    scope.h
  *
- *    Copyright (C) 1993, 1994, 1996, 1997, 1998, 1999, 2000, 2001,
- *    2002, 2004, 2005, 2006, 2007, 2008 by Larry Wall and others
+ *    Copyright (C) 1993, 1994, 1996, 1997, 1998, 1999, 2000, 2001, 2002, 2004,
+ *    2005, 2006, 2007, 2008, 2009, 2010, 2011, 2012, 2013, 2014, 2015, 2016,
+ *    2017, 2018, 2019, 2020, 2021, 2022 by Larry Wall and others
  *
  *    You may distribute under the terms of either the GNU General Public
  *    License or the Artistic License, as specified in the README file.
- *
  */
 
 /* *** Update arg_counts[] in scope.c if you modify these */
@@ -92,8 +92,8 @@
 #define SCOPE_SAVES_SIGNAL_MASK     0
 #endif
 
-/* the maximum number of entries that might be pushed using the SS_ADD*
- * macros */
+/* the maximum number of entries that might be pushed using the SS_ADD* macros
+ */
 #define SS_MAXPUSH                  4
 
 #define SSCHECK(need)   \
@@ -110,16 +110,15 @@
 #define SSPUSHDXPTR(p)                  (PL_savestack[PL_savestack_ix++].any_dxptr = (p))
 
 /* SS_ADD*: newer, faster versions of the above. Don't mix the two sets of
- * macros. These are fast because they save reduce accesses to the PL_
- * vars and move the size check to the end. Doing the check last means
- * that values in registers will have been pushed and no longer needed, so
- * don't need saving around the call to grow. Also, tail-call elimination
- * of the grow() can be done. These changes reduce the code of something
- * like save_pushptrptr() to half its former size.
- * Of course, doing the size check *after* pushing means we must always
- * ensure there are SS_MAXPUSH free slots on the savestack. This is ensured by
- * savestack_grow() and savestack_grow_cnt always allocating SS_MAXPUSH slots
- * more than asked for, or that it sets PL_savestack_max to
+ * macros. These are fast because they save reduce accesses to the PL_ vars and
+ * move the size check to the end. Doing the check last means that values in
+ * registers will have been pushed and no longer needed, so don't need saving
+ * around the call to grow. Also, tail-call elimination of the grow() can be
+ * done. These changes reduce the code of something like save_pushptrptr() to
+ * half its former size. Of course, doing the size check *after* pushing means
+ * we must always ensure there are SS_MAXPUSH free slots on the savestack. This
+ * is ensured by savestack_grow() and savestack_grow_cnt always allocating
+ * SS_MAXPUSH slots more than asked for, or that it sets PL_savestack_max to
  *
  * These are for internal core use only and are subject to change */
 
@@ -158,18 +157,18 @@
 =for apidoc_section $callback
 
 =for apidoc Amn;||SAVETMPS
-Opening bracket for temporaries on a callback.  See C<L</FREETMPS>> and
+Opening bracket for temporaries on a callback. See C<L</FREETMPS>> and
 L<perlcall>.
 
 =for apidoc Amn;||FREETMPS
-Closing bracket for temporaries on a callback.  See C<L</SAVETMPS>> and
+Closing bracket for temporaries on a callback. See C<L</SAVETMPS>> and
 L<perlcall>.
 
 =for apidoc Amn;||ENTER
-Opening bracket on a callback.  See C<L</LEAVE>> and L<perlcall>.
+Opening bracket on a callback. See C<L</LEAVE>> and L<perlcall>.
 
 =for apidoc Amn;||LEAVE
-Closing bracket on a callback.  See C<L</ENTER>> and L<perlcall>.
+Closing bracket on a callback. See C<L</ENTER>> and L<perlcall>.
 
 =for apidoc Am;||ENTER_with_name|"name"
 
@@ -287,10 +286,10 @@ scope has the given name. C<name> must be a literal string.
     } STMT_END
 
 /* Need to do the cop warnings like this, rather than a "SAVEFREESHAREDPV",
-   because realloc() means that the value can actually change. Possibly
-   could have done savefreesharedpvREF, but this way actually seems cleaner,
-   as it simplifies the code that does the saves, and reduces the load on the
-   save stack.  */
+   because realloc() means that the value can actually change. Possibly could
+   have done savefreesharedpvREF, but this way actually seems cleaner, as it
+   simplifies the code that does the saves, and reduces the load on the save
+   stack. */
 #define SAVECOMPILEWARNINGS()   \
     save_pushptr(PL_compiling.cop_warnings, SAVEt_COMPILE_WARNINGS)
 
@@ -318,27 +317,27 @@ scope has the given name. C<name> must be a literal string.
 
 These temporarily allocates data on the savestack, returning an I32 index into
 the savestack, because a pointer would get broken if the savestack is moved on
-reallocation.  Use L</C<SSPTR>> to convert the returned index into a pointer.
+reallocation. Use L</C<SSPTR>> to convert the returned index into a pointer.
 
-The forms differ in that plain C<SSNEW> allocates C<size> bytes;
-C<SSNEWt> and C<SSNEWat> allocate C<size> objects, each of which is type
-C<type>;
-and <SSNEWa> and C<SSNEWat> make sure to align the new data to an C<align>
-boundary.  The most useful value for the alignment is likely to be
-L</C<MEM_ALIGNBYTES>>.  The alignment will be preserved through savestack
+The forms differ in that plain C<SSNEW> allocates C<size> bytes; C<SSNEWt> and
+C<SSNEWat> allocate C<size> objects, each of which is type C<type>; and
+<SSNEWa> and C<SSNEWat> make sure to align the new data to an C<align>
+boundary. The most useful value for the alignment is likely to be
+L</C<MEM_ALIGNBYTES>>. The alignment will be preserved through savestack
 reallocation B<only> if realloc returns data aligned to a size divisible by
 "align"!
 
 =for apidoc   Am|type  |SSPTR |I32 index|type
 =for apidoc_item|type *|SSPTRt|I32 index|type
 
-These convert the C<index> returned by L/<C<SSNEW>> and kin into actual pointers.
+These convert the C<index> returned by L/<C<SSNEW>> and kin into actual
+pointers.
 
 The difference is that C<SSPTR> casts the result to C<type>, and C<SSPTRt>
 casts it to a pointer of that C<type>.
 
 =cut
- */
+*/
 
 #define SSNEW(size)             Perl_save_alloc(aTHX_ (size), 0)
 #define SSNEWt(n,t)             SSNEW((n)*sizeof(t))
@@ -369,10 +368,10 @@ casts it to a pointer of that C<type>.
 Implements C<SAVEOP>.
 
 =cut
- */
+*/
 
 #define save_op()           save_pushptr((void *)(PL_op), SAVEt_OP)
 
 /*
  * ex: set ts=8 sts=4 sw=4 et:
- */
+*/

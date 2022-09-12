@@ -4,15 +4,14 @@
  *
  *    You may distribute under the terms of either the GNU General Public
  *    License or the Artistic License, as specified in the README file.
- *
  */
 
-/* This file contains the newSV_type and newSV_type_mortal functions, as well as
- * the various struct and macro definitions they require. In the main, these
- * definitions were moved from sv.c, where many of them continue to also be used.
- * (In Perl_more_bodies, Perl_sv_upgrade and Perl_sv_clear, for example.) Code
- * comments associated with definitions and functions were also copied across
- * verbatim.
+/* This file contains the newSV_type and newSV_type_mortal functions, as well
+ * as the various struct and macro definitions they require. In the main, these
+ * definitions were moved from sv.c, where many of them continue to also be
+ * used. (In Perl_more_bodies, Perl_sv_upgrade and Perl_sv_clear, for example.)
+ * Code comments associated with definitions and functions were also copied
+ * across verbatim.
  *
  * The rationale for having these as inline functions, rather than in sv.c, is
  * that the target type is very often known at compile time, and therefore
@@ -22,8 +21,8 @@
 
 /* This definition came from perl.h*/
 
-/* The old value was hard coded at 1008. (4096-16) seems to be a bit faster,
-   at least on FreeBSD.  YMMV, so experiment.  */
+/* The old value was hard coded at 1008. (4096-16) seems to be a bit faster, at
+   least on FreeBSD. YMMV, so experiment. */
 #ifndef PERL_ARENA_SIZE
 #define PERL_ARENA_SIZE     4080
 #endif
@@ -35,9 +34,8 @@
 #  define SvARENA_CHAIN(sv)                       ((sv)->sv_u.svu_rv)
 #  define SvARENA_CHAIN_SET(sv,val)               (sv)->sv_u.svu_rv = MUTABLE_SV((val))
 /* Whilst I'd love to do this, it seems that things like to check on
-   unreferenced scalars
-#  define POISON_SV_HEAD(sv)                      PoisonNew(sv, 1, struct STRUCT_SV)
-*/
+unreferenced scalars
+ */
 #  define POISON_SV_HEAD(sv)                \
        PoisonNew(&SvANY(sv), 1, void *),    \
        PoisonNew(&SvREFCNT(sv), 1, U32)
@@ -64,8 +62,8 @@
         ++PL_sv_count;                              \
     } STMT_END
 
-/* Perl_more_sv lives in sv.c, we don't want to inline it.
- * but the function declaration seems to be needed. */
+/* Perl_more_sv lives in sv.c, we don't want to inline it. but the function
+ * declaration seems to be needed. */
 SV* Perl_more_sv(pTHX);
 
 /* new_SV(): return a new, empty SV head */
@@ -123,15 +121,15 @@ S_new_SV(pTHX_ const char *file, int line, const char *func)
 typedef struct xpvhv_with_aux XPVHV_WITH_AUX;
 
 struct body_details {
-    U8              body_size;          /* Size to allocate  */
-    U8              copy;               /* Size of structure to copy
-                                           (may be shorter) */
-    U8              offset;             /* Size of unalloced ghost fields
-                                           to first alloced field*/
+    U8              body_size;          /* Size to allocate */
+    U8              copy;               /* Size of structure to copy (may be
+                                           shorter) */
+    U8              offset;             /* Size of unalloced ghost fields to
+                                           first alloced field */
     PERL_BITFIELD8  type : 4;           /* We have space for a sanity check. */
     PERL_BITFIELD8  cant_upgrade : 1;   /* Cannot upgrade this type */
-    PERL_BITFIELD8  zero_nv : 1;        /* zero the NV when upgrading
-                                           from this */
+    PERL_BITFIELD8  zero_nv : 1;        /* zero the NV when upgrading from this
+                                         */
     PERL_BITFIELD8  arena : 1;          /* Allocated from an arena */
     U32             arena_size;         /* Size of arena to allocate */
 };
@@ -159,20 +157,19 @@ ALIGNED_TYPE(XPVIO);
 
 
 #ifdef PURIFY
-/* With -DPURFIY we allocate everything directly, and don't use arenas.
-   This seems a rather elegant way to simplify some of the code below.  */
+/* With -DPURFIY we allocate everything directly, and don't use arenas. This
+   seems a rather elegant way to simplify some of the code below. */
 #define HASARENA                        FALSE
 #else
 #define HASARENA                        TRUE
 #endif
 #define NOARENA                         FALSE
 
-/* Size the arenas to exactly fit a given number of bodies.  A count
-   of 0 fits the max number bodies into a PERL_ARENA_SIZE.block,
-   simplifying the default.  If count > 0, the arena is sized to fit
-   only that many bodies, allowing arenas to be used for large, rare
-   bodies (XPVFM, XPVIO) without undue waste.  The arena size is
-   limited by PERL_ARENA_SIZE, so we can safely oversize the
+/* Size the arenas to exactly fit a given number of bodies. A count of 0 fits
+   the max number bodies into a PERL_ARENA_SIZE.block, simplifying the default.
+   If count > 0, the arena is sized to fit only that many bodies, allowing
+   arenas to be used for large, rare bodies (XPVFM, XPVIO) without undue waste.
+   The arena size is limited by PERL_ARENA_SIZE, so we can safely oversize the
    declarations.
  */
 #define FIT_ARENA0(body_size)   \
@@ -187,22 +184,22 @@ ALIGNED_TYPE(XPVIO);
      : FIT_ARENA0 (body_size))
 
 /* Calculate the length to copy. Specifically work out the length less any
-   final padding the compiler needed to add.  See the comment in sv_upgrade
-   for why copying the padding proved to be a bug.  */
+   final padding the compiler needed to add. See the comment in sv_upgrade for
+   why copying the padding proved to be a bug. */
 
 #define copy_length(type, last_member)  \
     STRUCT_OFFSET(type, last_member)    \
     + sizeof (((type*)SvANY((const SV *)0))->last_member)
 
 static const struct body_details bodies_by_type[] = {
-    /* HEs use this offset for their arena.  */
+    /* HEs use this offset for their arena. */
     { 0, 0, 0, SVt_NULL, FALSE, NONV, NOARENA, 0 },
 
-    /* IVs are in the head, so the allocation size is 0.  */
+    /* IVs are in the head, so the allocation size is 0. */
     { 0,
-      sizeof(IV), /* This is used to copy out the IV body.  */
+      sizeof(IV), /* This is used to copy out the IV body. */
       STRUCT_OFFSET(XPVIV, xiv_iv), SVt_IV, FALSE, NONV,
-      NOARENA /* IVS don't need an arena  */, 0
+      NOARENA /* IVS don't need an arena */, 0
     },
 
 #if NVSIZE <= IVSIZE
@@ -322,7 +319,8 @@ static const struct body_details bodies_by_type[] = {
 
 #ifndef PURIFY
 
-/* grab a new thing from the arena's free list, allocating more if necessary. */
+/* grab a new thing from the arena's free list, allocating more if necessary.
+*/
 #define new_body_from_arena(xpv, root_index, type_meta)                 \
     STMT_START {                                                        \
         void ** const r3wt = &PL_body_roots[root_index];                \
@@ -347,7 +345,7 @@ static const struct body_details fake_rv =
     { 0, 0, 0, SVt_IV, FALSE, NONV, NOARENA, 0 };
 
 static const struct body_details fake_hv_with_aux =
-    /* The SVt_IV arena is used for (larger) PVHV bodies.  */
+    /* The SVt_IV arena is used for (larger) PVHV bodies. */
     { sizeof(ALIGNED_TYPE_NAME(XPVHV_WITH_AUX)),
       copy_length(XPVHV, xhv_max),
       0,
@@ -357,8 +355,8 @@ static const struct body_details fake_hv_with_aux =
 /*
 =for apidoc newSV_type
 
-Creates a new SV, of the type specified.  The reference count for the new SV
-is set to 1.
+Creates a new SV, of the type specified. The reference count for the new SV is
+set to 1.
 
 =cut
 */
@@ -399,13 +397,13 @@ Perl_newSV_type(pTHX_ const svtype type)
 #ifndef PURIFY
         assert(type_details->arena);
         assert(type_details->arena_size);
-        /* This points to the start of the allocated area.  */
+        /* This points to the start of the allocated area. */
         new_body = S_new_body(aTHX_ type);
         /* xpvav and xpvhv have no offset, so no need to adjust new_body */
         assert(!(type_details->offset));
 #else
-        /* We always allocated the full length item with PURIFY. To do this
-           we fake things so that arena is false for all 16 types..  */
+        /* We always allocated the full length item with PURIFY. To do this we
+           fake things so that arena is false for all 16 types.. */
         new_body = new_NOARENAZ(type_details);
 #endif
         SvANY(sv) = new_body;
@@ -433,7 +431,7 @@ Perl_newSV_type(pTHX_ const svtype type)
             HvMAX(sv) = PERL_HASH_DEFAULT_HvMAX;
         }
 
-        sv->sv_u.svu_array = NULL; /* or svu_hash  */
+        sv->sv_u.svu_array = NULL; /* or svu_hash */
         break;
 
     case SVt_PVIV:
@@ -447,15 +445,15 @@ Perl_newSV_type(pTHX_ const svtype type)
     case SVt_PVNV:
     case SVt_PV:
         /* For a type known at compile time, it should be possible for the
-         * compiler to deduce the value of (type_details->arena), resolve
-         * that branch below, and inline the relevant values from
-         * bodies_by_type. Except, at least for gcc, it seems not to do that.
-         * We help it out here with two deviations from sv_upgrade:
-         * (1) Minor rearrangement here, so that PVFM - the only type at this
-         *     point not to be allocated from an array appears last, not PV.
-         * (2) The ASSUME() statement here for everything that isn't PVFM.
-         * Obviously this all only holds as long as it's a true reflection of
-         * the bodies_by_type lookup table. */
+         * compiler to deduce the value of (type_details->arena), resolve that
+         * branch below, and inline the relevant values from bodies_by_type.
+         * Except, at least for gcc, it seems not to do that. We help it out
+         * here with two deviations from sv_upgrade: (1) Minor rearrangement
+         * here, so that PVFM - the only type at this point not to be allocated
+         * from an array appears last, not PV. (2) The ASSUME() statement here
+         * for everything that isn't PVFM. Obviously this all only holds as
+         * long as it's a true reflection of the bodies_by_type lookup table.
+         */
 #ifndef PURIFY
          ASSUME(type_details->arena);
 #endif
@@ -463,11 +461,11 @@ Perl_newSV_type(pTHX_ const svtype type)
     case SVt_PVFM:
 
         assert(type_details->body_size);
-        /* We always allocated the full length item with PURIFY. To do this
-           we fake things so that arena is false for all 16 types..  */
+        /* We always allocated the full length item with PURIFY. To do this we
+           fake things so that arena is false for all 16 types.. */
 #ifndef PURIFY
         if(type_details->arena) {
-            /* This points to the start of the allocated area.  */
+            /* This points to the start of the allocated area. */
             new_body = S_new_body(aTHX_ type);
             Zero(new_body, type_details->body_size, char);
             new_body = ((char *)new_body) - type_details->offset;
@@ -505,16 +503,12 @@ Perl_newSV_type(pTHX_ const svtype type)
 /*
 =for apidoc newSV_type_mortal
 
-Creates a new mortal SV, of the type specified.  The reference count for the
-new SV is set to 1.
+Creates a new mortal SV, of the type specified. The reference count for the new
+SV is set to 1.
 
-This is equivalent to
-    SV* sv = sv_2mortal(newSV_type(<some type>))
-and
-    SV* sv = sv_newmortal();
-    sv_upgrade(sv, <some_type>)
-but should be more efficient than both of them. (Unless sv_2mortal is inlined
-at some point in the future.)
+This is equivalent to SV* sv = sv_2mortal(newSV_type(<some type>)) and SV* sv =
+sv_newmortal(); sv_upgrade(sv, <some_type>) but should be more efficient than
+both of them. (Unless sv_2mortal is inlined at some point in the future.)
 
 =cut
 */
@@ -539,8 +533,8 @@ Perl_newSV_type_mortal(pTHX_ const svtype type)
 =for apidoc SvPVXtrue
 
 Returns a boolean as to whether or not C<sv> contains a PV that is considered
-TRUE.  FALSE is returned if C<sv> doesn't contain a PV, or if the PV it does
-contain is zero length, or consists of just the single character '0'.  Every
+TRUE. FALSE is returned if C<sv> doesn't contain a PV, or if the PV it does
+contain is zero length, or consists of just the single character '0'. Every
 other PV value is considered TRUE.
 
 As of Perl v5.37.1, C<sv> is evaluated exactly once; in earlier releases, it
@@ -571,9 +565,9 @@ Perl_SvPVXtrue(pTHX_ SV *sv)
 
 /*
 =for apidoc SvGETMAGIC
-Invokes C<L</mg_get>> on an SV if it has 'get' magic.  For example, this
-will call C<FETCH> on a tied variable.  As of 5.37.1, this function is
-guaranteed to evaluate its argument exactly once.
+Invokes C<L</mg_get>> on an SV if it has 'get' magic. For example, this will
+call C<FETCH> on a tied variable. As of 5.37.1, this function is guaranteed to
+evaluate its argument exactly once.
 
 =cut
 */
@@ -743,8 +737,8 @@ Perl_SvPADSTALE_off(SV *sv)
 =for apidoc_item SvIV_nomg
 =for apidoc_item SvIVx
 
-These each coerce the given SV to IV and return it.  The returned value in many
-circumstances will get stored in C<sv>'s IV slot, but not in all cases.  (Use
+These each coerce the given SV to IV and return it. The returned value in many
+circumstances will get stored in C<sv>'s IV slot, but not in all cases. (Use
 C<L</sv_setiv>> to make sure it does).
 
 As of 5.37.1, all are guaranteed to evaluate C<sv> only once.
@@ -758,8 +752,8 @@ C<SvIV_nomg> is the same as C<SvIV>, but does not perform 'get' magic.
 =for apidoc_item SvNV_nomg
 =for apidoc_item SvNVx
 
-These each coerce the given SV to NV and return it.  The returned value in many
-circumstances will get stored in C<sv>'s NV slot, but not in all cases.  (Use
+These each coerce the given SV to NV and return it. The returned value in many
+circumstances will get stored in C<sv>'s NV slot, but not in all cases. (Use
 C<L</sv_setnv>> to make sure it does).
 
 As of 5.37.1, all are guaranteed to evaluate C<sv> only once.
@@ -773,8 +767,8 @@ C<SvNV_nomg> is the same as C<SvNV>, but does not perform 'get' magic.
 =for apidoc_item SvUV_nomg
 =for apidoc_item SvUVx
 
-These each coerce the given SV to UV and return it.  The returned value in many
-circumstances will get stored in C<sv>'s UV slot, but not in all cases.  (Use
+These each coerce the given SV to UV and return it. The returned value in many
+circumstances will get stored in C<sv>'s UV slot, but not in all cases. (Use
 C<L</sv_setuv>> to make sure it does).
 
 As of 5.37.1, all are guaranteed to evaluate C<sv> only once.
@@ -935,8 +929,8 @@ Perl_SvPV_helper(pTHX_
 /*
 =for apidoc newRV_noinc
 
-Creates an RV wrapper for an SV.  The reference count for the original
-SV is B<not> incremented.
+Creates an RV wrapper for an SV. The reference count for the original SV is
+B<not> incremented.
 
 =cut
 */
@@ -959,4 +953,4 @@ Perl_newRV_noinc(pTHX_ SV *const tmpRef)
 
 /*
  * ex: set ts=8 sts=4 sw=4 et:
- */
+*/

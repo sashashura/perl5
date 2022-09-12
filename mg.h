@@ -1,11 +1,11 @@
 /*    mg.h
  *
- *    Copyright (C) 1991, 1992, 1993, 1994, 1995, 1996, 1997, 1999,
- *    2000, 2002, 2005, 2006, 2007, 2008 by Larry Wall and others
+ *    Copyright (C) 1991, 1992, 1993, 1994, 1995, 1996, 1997, 1999, 2000, 2002,
+ *    2005, 2006, 2007, 2008, 2009, 2010, 2011, 2012, 2013, 2014, 2015, 2016,
+ *    2017, 2018, 2019, 2020, 2021, 2022 by Larry Wall and others
  *
  *    You may distribute under the terms of either the GNU General Public
  *    License or the Artistic License, as specified in the README file.
- *
  */
 
 struct mgvtbl {
@@ -52,10 +52,10 @@ struct magic {
      MUTABLE_SV((mg)->mg_ptr) :             \
      NULL)
 
-/* If mg contains an SV, these extract the PV stored in that SV;
-   otherwise, these extract the mg's mg_ptr/mg_len.
-   These do NOT account for the SV's UTF8 flag, so handle with care.
-*/
+/* If mg contains an SV, these extract the PV stored in that SV; otherwise,
+   these extract the mg's mg_ptr/mg_len. These do NOT account for the SV's UTF8
+   flag, so handle with care.
+ */
 #define MgPV(mg,lp)                                 \
     ((((int)(lp = (mg)->mg_len)) == HEf_SVKEY) ?    \
      SvPV(MUTABLE_SV((mg)->mg_ptr),lp) :            \
@@ -91,4 +91,4 @@ struct magic {
 
 /*
  * ex: set ts=8 sts=4 sw=4 et:
- */
+*/
