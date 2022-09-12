@@ -320,7 +320,8 @@ struct IPerlStdIOInfo
 START_EXTERN_C
      int decc$ungetc(int __c, FILE *__stream);
 END_EXTERN_C
-#      define PerlSIO_ungetc(c,f) ((c) == EOF ? EOF :   \
+#      define PerlSIO_ungetc(c,f)  \
+    ((c) == EOF ? EOF :\
             ((*(f) && !((*(f))->_flag & _IONBF) &&      \
             ((*(f))->_ptr > (*(f))->_base)) ?           \
             ((*(f))->_cnt++, *(--(*(f))->_ptr) = (c)) : decc$ungetc(c,f)))
@@ -563,9 +564,10 @@ struct IPerlEnvInfo
 
      /* Use the comma operator to return 0/non-zero, while avoiding putting
       * this in an inline function */
-#    define PerlEnv_putenv(str) (ENV_LOCK, (putenv(str)         \
-                                            ? (ENV_UNLOCK, 1)   \
-                                            : (ENV_UNLOCK, 0)))
+#    define PerlEnv_putenv(str)  \
+    (ENV_LOCK, (putenv(str)\
+                ? (ENV_UNLOCK, 1)   \
+                : (ENV_UNLOCK, 0)))
 #  else
 #    define PerlEnv_putenv(str)         putenv(str)
 #  endif
@@ -592,9 +594,10 @@ struct IPerlEnvInfo
 #  define PerlEnv_get_childdir()                win32_get_childdir()
 #  define PerlEnv_free_childdir(d)      win32_free_childdir((d))
 #  else
-#    define PerlEnv_clearenv(str)               (ENV_LOCK, (clearenv(str)   \
-                                                    ? (ENV_UNLOCK, 1)       \
-                                                    : (ENV_UNLOCK, 0)))
+#    define PerlEnv_clearenv(str)                \
+    (ENV_LOCK, (clearenv(str)\
+        ? (ENV_UNLOCK, 1)       \
+        : (ENV_UNLOCK, 0)))
 #    define PerlEnv_get_childenv()              get_childenv()
 #    define PerlEnv_free_childenv(e)    free_childenv((e))
 #    define PerlEnv_get_childdir()              get_childdir()
@@ -633,8 +636,8 @@ typedef Off_t           (*LPLIOLseek)(struct IPerlLIO*, int, Off_t, int);
 typedef int             (*LPLIOLstat)(struct IPerlLIO*, const char*,
                             Stat_t*);
 typedef char*           (*LPLIOMktemp)(struct IPerlLIO*, char*);
-typedef int             (*LPLIOOpen)(struct IPerlLIO*, const char*, int);       
-typedef int             (*LPLIOOpen3)(struct IPerlLIO*, const char*, int, int); 
+typedef int             (*LPLIOOpen)(struct IPerlLIO*, const char*, int);
+typedef int             (*LPLIOOpen3)(struct IPerlLIO*, const char*, int, int);
 typedef int             (*LPLIORead)(struct IPerlLIO*, int, void*, unsigned int);
 typedef int             (*LPLIORename)(struct IPerlLIO*, const char*,
                             const char*);
@@ -893,7 +896,7 @@ struct IPerlMemInfo
 #  define PerlMem_realloc(buf, size)    realloc((buf), (size))
 #  define PerlMem_free(buf)             free((buf))
 #  define PerlMem_calloc(num, size)     calloc((num), (size))
-#  define PerlMem_get_lock()            
+#  define PerlMem_get_lock()
 #  define PerlMem_free_lock()
 #  define PerlMem_is_locked()           0
 
@@ -902,7 +905,7 @@ struct IPerlMemInfo
 #  define PerlMemShared_realloc(buf, size)      realloc((buf), (size))
 #  define PerlMemShared_free(buf)               free((buf))
 #  define PerlMemShared_calloc(num, size)       calloc((num), (size))
-#  define PerlMemShared_get_lock()              
+#  define PerlMemShared_get_lock()
 #  define PerlMemShared_free_lock()
 #  define PerlMemShared_is_locked()             0
 
@@ -911,7 +914,7 @@ struct IPerlMemInfo
 #  define PerlMemParse_realloc(buf, size)       realloc((buf), (size))
 #  define PerlMemParse_free(buf)                free((buf))
 #  define PerlMemParse_calloc(num, size)        calloc((num), (size))
-#  define PerlMemParse_get_lock()               
+#  define PerlMemParse_get_lock()
 #  define PerlMemParse_free_lock()
 #  define PerlMemParse_is_locked()              0
 
