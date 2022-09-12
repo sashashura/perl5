@@ -360,7 +360,8 @@ Rethrows a previously caught exception.  See L<perlguts/"Exception Handling">.
        Perl_xs_handshake(HS_KEY(FALSE, FALSE, "v" PERL_API_VERSION_STRING, XS_VERSION), \
            HS_CXT, __FILE__, items, ax, "v" PERL_API_VERSION_STRING, XS_VERSION)
 #else
-/* should this be a #error? if you want both checked, you better supply XS_VERSION right? */
+/* should this be a #error? if you want both checked,
+   you better supply XS_VERSION right? */
 #  define XS_BOTHVERSION_BOOTCHECK    XS_APIVERSION_BOOTCHECK
 #endif
 
@@ -373,7 +374,8 @@ Rethrows a previously caught exception.  See L<perlguts/"Exception Handling">.
        Perl_xs_handshake(HS_KEY(FALSE, TRUE, "v" PERL_API_VERSION_STRING, XS_VERSION),  \
            HS_CXT, __FILE__, "v" PERL_API_VERSION_STRING, XS_VERSION)
 #else
-/* should this be a #error? if you want both checked, you better supply XS_VERSION right? */
+/* should this be a #error? if you want both checked,
+   you better supply XS_VERSION right? */
 #  define XS_BOTHVERSION_POPMARK_BOOTCHECK    XS_APIVERSION_POPMARK_BOOTCHECK
 #endif
 
@@ -385,7 +387,8 @@ Rethrows a previously caught exception.  See L<perlguts/"Exception Handling">.
        Perl_xs_handshake(HS_KEY(TRUE, TRUE, "v" PERL_API_VERSION_STRING, XS_VERSION),   \
            HS_CXT, __FILE__, "v" PERL_API_VERSION_STRING, XS_VERSION)
 #else
-/* should this be a #error? if you want both checked, you better supply XS_VERSION right? */
+/* should this be a #error? if you want both checked,
+   you better supply XS_VERSION right? */
 #  define XS_BOTHVERSION_SETXSUBFN_POPMARK_BOOTCHECK    \
        XS_APIVERSION_SETXSUBFN_POPMARK_BOOTCHECK
 #endif

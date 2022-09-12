@@ -133,7 +133,8 @@ required, but is kept for backwards compatibility.
 #if (defined(__STDC_VERSION__) && __STDC_VERSION__ >= 199901L) || (defined(__SUNPRO_C)) /* C99 or close enough. */
 #  define FUNCTION__          __func__
 #  define SAFE_FUNCTION__     __func__
-#elif (defined(__DECC_VER)) /* Tru64 or VMS, and strict C89 being used, but not modern enough cc (in Tru64, -c99 not known, only -std1). */
+#elif (defined(__DECC_VER)) /* Tru64 or VMS, and strict C89 being used, but not
+                     modern enough cc (in Tru64, -c99 not known, only -std1). */
 #  define FUNCTION__          ("")
 #  define SAFE_FUNCTION__     ("UNKNOWN")
 #else
@@ -1640,7 +1641,8 @@ END_EXTERN_C
 #   define isPUNCT_A(c)            generic_isCC_A_(c, CC_PUNCT_)
 #   define isSPACE_A(c)            generic_isCC_A_(c, CC_SPACE_)
 #   define isWORDCHAR_A(c)         generic_isCC_A_(c, CC_WORDCHAR_)
-#   define isXDIGIT_A(c)           generic_isCC_(c, CC_XDIGIT_)    /* No non-ASCII
+#   define isXDIGIT_A(c)           generic_isCC_(c, CC_XDIGIT_)    /* No
+                                                                      non-ASCII
                                                           xdigits */
 #   define isIDFIRST_A(c)          generic_isCC_A_(c, CC_IDFIRST_)
 #   define isALPHA_L1(c)           generic_isCC_(c, CC_ALPHA_)

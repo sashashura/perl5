@@ -91,7 +91,8 @@ PERLVAR(G, perlio_mutex, perl_mutex)    /* Mutex for perlio fd refcounts */
 
 PERLVARI(G, perlio_fd_refcnt, int *, 0) /* Pointer to array of fd refcounts.  */
 PERLVARI(G, perlio_fd_refcnt_size, int, 0) /* Size of the array */
-PERLVARI(G, perlio_debug_fd, int, 0)    /* the fd to write perlio debug into, 0 means not set yet */
+PERLVARI(G, perlio_debug_fd, int, 0)    /* the fd to write perlio debug into,
+                                           0 means not set yet */
 #endif
 
 #ifdef HAS_MMAP

@@ -115,7 +115,8 @@
 #else
 
 #define PVT_PERL_HASH_FUNC  "SBOX32_WITH_" PVT__PERL_HASH_FUNC
-/* note the 4 in the below code comes from the fact the seed to initialize the SBOX is 128 bits */
+/* note the 4 in the below code comes from the fact
+   the seed to initialize the SBOX is 128 bits */
 #define PVT_PERL_HASH_SEED_BYTES    \
     ( PVT__PERL_HASH_SEED_BYTES + (int)( 4 * sizeof(U32)) )
 

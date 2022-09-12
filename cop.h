@@ -829,7 +829,8 @@ struct block_loop {
         }       lazysv;
     }       state_u;
 #ifdef USE_ITHREADS
-    PAD     *oldcomppad;    /* needed to map itervar_u.svp during thread clone */
+    PAD     *oldcomppad;    /* needed to map itervar_u.svp
+                               during thread clone */
 #endif
 };
 
@@ -1086,9 +1087,11 @@ struct context {
 #define G_DISCARD                  0x4  /* Call FREETMPS.
                                    Don't change this without consulting the
                                    hash actions codes defined in hv.h */
-#define G_EVAL                     0x8  /* Assume eval {} around subroutine call. */
+#define G_EVAL                     0x8  /* Assume eval {} around
+                                           subroutine call. */
 #define G_NOARGS                  0x10  /* Don't construct a @_ array. */
-#define G_KEEPERR                 0x20  /* Warn for errors, don't overwrite $@ */
+#define G_KEEPERR                 0x20  /* Warn for errors, don't
+                                           overwrite $@ */
 #define G_NODEBUG                 0x40  /* Disable debugging at toplevel.  */
 #define G_METHOD                  0x80  /* Calling method. */
 #define G_FAKINGEVAL             0x100  /* Faking an eval context for call_sv or
@@ -1099,16 +1102,19 @@ struct context {
 #define G_WRITING_TO_STDERR      0x400  /* Perl_write_to_stderr() is calling
                                     Perl_magic_methcall().  */
 #define G_RE_REPARSING           0x800  /* compiling a run-time /(?{..})/ */
-#define G_METHOD_NAMED          0x1000  /* calling named method, eg without :: or ' */
+#define G_METHOD_NAMED          0x1000  /* calling named method, eg
+                                           without :: or ' */
 #define G_RETHROW               0x2000  /* eval_sv(): re-throw any error */
 
 /* flag bits for PL_in_eval */
 #define EVAL_NULL                    0  /* not in an eval */
 #define EVAL_INEVAL                  1  /* some enclosing scope is an eval */
-#define EVAL_WARNONLY                2  /* used by yywarn() when calling yyerror() */
+#define EVAL_WARNONLY                2  /* used by yywarn() when
+                                           calling yyerror() */
 #define EVAL_KEEPERR                 4  /* set by Perl_call_sv if G_KEEPERR */
 #define EVAL_INREQUIRE               8  /* The code is being required. */
-#define EVAL_RE_REPARSING         0x10  /* eval_sv() called with G_RE_REPARSING */
+#define EVAL_RE_REPARSING         0x10  /* eval_sv() called with
+                                           G_RE_REPARSING */
 /* if adding extra bits, make sure they can fit in CxOLD_OP_TYPE() */
 
 /* Support for switching (stack and block) contexts.

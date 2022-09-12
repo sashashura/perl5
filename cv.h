@@ -63,11 +63,13 @@ See L<perlguts/Autoloading with XSUBs>.
    Must be assert protected as in Perl_CvDEPTH before use. */
 #define CvDEPTHunsafe(sv)   ((XPVCV*)MUTABLE_PTR(SvANY(sv)))->xcv_depth
 
-/* these CvPADLIST/CvRESERVED asserts can be reverted one day, once stabilized */
+/* these CvPADLIST/CvRESERVED asserts can be
+   reverted one day, once stabilized */
 #define CvPADLIST(sv)                   \
     (*(assert_(!CvISXSUB((CV*)(sv)))    \
         &(((XPVCV*)MUTABLE_PTR(SvANY(sv)))->xcv_padlist_u.xcv_padlist)))
-/* CvPADLIST_set is not public API, it can be removed one day, once stabilized */
+/* CvPADLIST_set is not public API, it can
+   be removed one day, once stabilized */
 #ifdef DEBUGGING
 #  define CvPADLIST_set(sv, padlist)  Perl_set_padlist((CV*)sv, padlist)
 #else
@@ -115,7 +117,8 @@ See L<perlguts/Autoloading with XSUBs>.
  * renamed to avoid collision with an upcoming feature */
 #define CVf_NOWARN_AMBIGUOUS    0x0001
 
-#define CVf_LVALUE              0x0002  /* CV return value can be used as lvalue */
+#define CVf_LVALUE              0x0002  /* CV return value can be
+                                           used as lvalue */
 #define CVf_CONST               0x0004  /* inlinable sub */
 #define CVf_ISXSUB              0x0008  /* CV is an XSUB, not pure perl.  */
 
@@ -123,7 +126,8 @@ See L<perlguts/Autoloading with XSUBs>.
 #define CVf_CLONE               0x0020  /* anon CV uses external lexicals */
 #define CVf_CLONED              0x0040  /* a clone of one of those */
 #define CVf_ANON                0x0080  /* CV is not pointed to by a GV */
-#define CVf_UNIQUE              0x0100  /* sub is only called once (eg PL_main_cv,
+#define CVf_UNIQUE              0x0100  /* sub is only called once
+                                           (eg PL_main_cv,
                                    require, eval). */
 #define CVf_NODEBUG             0x0200  /* no DB::sub indirection for this CV
                                    (esp. useful for special XSUBs) */
@@ -132,13 +136,15 @@ See L<perlguts/Autoloading with XSUBs>.
 # define CVf_SLABBED     0x0800  /* Holds refcount on op slab  */
 #endif
 #define CVf_DYNFILE              0x1000     /* The filename is malloced  */
-#define CVf_AUTOLOAD             0x2000     /* SvPVX contains AUTOLOADed sub name  */
+#define CVf_AUTOLOAD             0x2000     /* SvPVX contains AUTOLOADed
+                                               sub name */
 #define CVf_HASEVAL              0x4000     /* contains string eval  */
 #define CVf_NAMED                0x8000     /* Has a name HEK */
 #define CVf_LEXICAL             0x10000     /* Omit package from name */
 #define CVf_ANONCONST           0x20000     /* :const - create anonconst op */
 #define CVf_SIGNATURE           0x40000     /* CV uses a signature */
-#define CVf_REFCOUNTED_ANYSV    0x80000     /* CvXSUBANY().any_sv is refcounted */
+#define CVf_REFCOUNTED_ANYSV    0x80000     /* CvXSUBANY().any_sv
+                                               is refcounted */
 
 /* This symbol for optimised communication between toke.c and op.c: */
 #define CVf_BUILTIN_ATTRS           (CVf_NOWARN_AMBIGUOUS|CVf_LVALUE|CVf_ANONCONST)

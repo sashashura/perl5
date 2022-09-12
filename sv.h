@@ -461,7 +461,8 @@ perform the upgrade if necessary.  See C<L</svtype>>.
                                        stringification is UTF-8. This might
                                        only happen as a side effect of SvPV() */
 /* PVHV */
-#define SVphv_SHAREKEYS     0x20000000  /* PVHV keys live on shared string table */
+#define SVphv_SHAREKEYS     0x20000000  /* PVHV keys live on shared
+                                           string table */
 
 /* PVAV could probably use 0x2000000 without conflict. I assume that PVFM can
    be UTF-8 encoded, and PVCVs could well have UTF-8 prototypes. PVIOs haven't

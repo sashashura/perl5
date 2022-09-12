@@ -62,21 +62,26 @@
    private to the engine itself. It now lives here. */
 
 typedef struct regexp_internal {
-    regnode                 *regstclass;    /* Optional startclass as identified or constructed
+    regnode                 *regstclass;    /* Optional startclass as identified
+                                               or constructed
                                                by the optimiser */
-    struct reg_data         *data;          /* Additional miscellaneous data used by the program.
+    struct reg_data         *data;          /* Additional miscellaneous data
+                                               used by the program.
                                                Used to make it easier to clone and free arbitrary
                                                data that the regops need. Often the ARG field of
                                                a regop is an index into this structure. NOTE the
                                                0th element of this structure is NEVER used and is
                                                strictly reserved for internal purposes. */
     struct reg_code_blocks  *code_blocks;   /* positions of literal (?{}) */
-    U32                     proglen;        /* size of the compiled program in regnodes */
-    U32                     name_list_idx;  /* Optional data index of an array of paren names,
+    U32                     proglen;        /* size of the compiled program
+                                               in regnodes */
+    U32                     name_list_idx;  /* Optional data index of an
+                                               array of paren names,
                                                only valid when RXp_PAREN_NAMES(prog) is true,
                                                0 means "no value" like any other index into the
                                                data array.*/
-    regnode                 program[1];     /* Unwarranted chumminess with compiler. */
+    regnode                 program[1];     /* Unwarranted chumminess
+                                               with compiler. */
 } regexp_internal;
 
 #define RXi_SET(x,y)                (x)->pprivate = (void*)(y)
@@ -165,7 +170,8 @@ struct regnode_lstring { /* Constructed this way to keep the string aligned. */
     U8      flags;
     U8      type;
     U16     next_off;
-    U32     str_len;    /* Only 18 bits allowed before would overflow 'next_off' */
+    U32     str_len;    /* Only 18 bits allowed before would
+                           overflow 'next_off' */
     char    string[1];
 };
 
@@ -264,7 +270,8 @@ struct regnode_charclass {
 
 /* has runtime (locale) \d, \w, ..., [:posix:] classes */
 struct regnode_charclass_posixl {
-    U8      flags;                      /* ANYOF_MATCHES_POSIXL bit must go here */
+    U8      flags;                      /* ANYOF_MATCHES_POSIXL
+                                           bit must go here */
     U8      type;
     U16     next_off;
     U32     arg1;
@@ -286,7 +293,8 @@ struct regnode_charclass_posixl {
  * never a next node.
  */
 struct regnode_ssc {
-    U8      flags;                      /* ANYOF_MATCHES_POSIXL bit must go here */
+    U8      flags;                      /* ANYOF_MATCHES_POSIXL
+                                           bit must go here */
     U8      type;
     U16     next_off;
     U32     arg1;
@@ -1131,21 +1139,28 @@ typedef struct _reg_trie_trans    reg_trie_trans;
    refcount is first in both this and _reg_ac_data to allow a space
    optimisation in Perl_regdupe.  */
 struct _reg_trie_data {
-    U32                 refcount;           /* number of times this trie is referenced */
+    U32                 refcount;           /* number of times this trie
+                                               is referenced */
     U32                 lasttrans;          /* last valid transition element */
     U16                 *charmap;           /* byte to charid lookup array */
     reg_trie_state      *states;            /* state data */
     reg_trie_trans      *trans;             /* array of transition elements */
     char                *bitmap;            /* stclass bitmap */
-    U16                 *jump;              /* optional 1 indexed array of offsets before tail
+    U16                 *jump;              /* optional 1 indexed array
+                                               of offsets before tail
                                                for the node following a given word. */
     reg_trie_wordinfo   *wordinfo;          /* array of info per word */
-    U16                 uniquecharcount;    /* unique chars in trie (width of trans table) */
-    U32                 startstate;         /* initial state - used for common prefix optimisation */
-    STRLEN              minlen;             /* minimum length of words in trie - build/opt only? */
-    STRLEN              maxlen;             /* maximum length of words in trie - build/opt only? */
+    U16                 uniquecharcount;    /* unique chars in trie (width
+                                               of trans table) */
+    U32                 startstate;         /* initial state - used for common
+                                               prefix optimisation */
+    STRLEN              minlen;             /* minimum length of words in
+                                               trie - build/opt only? */
+    STRLEN              maxlen;             /* maximum length of words in
+                                               trie - build/opt only? */
     U32                 prefixlen;          /* #chars in common prefix */
-    U32                 statecount;         /* Build only - number of states in the states array
+    U32                 statecount;         /* Build only - number of states
+                                               in the states array
                                                (including the unused zero state) */
     U32                 wordcount;          /* Build only */
 #ifdef DEBUGGING
@@ -1189,7 +1204,8 @@ typedef struct _reg_ac_data reg_ac_data;
 #define IS_ANYOF_TRIE(op)           ((op)==TRIEC || (op)==AHOCORASICKC)
 #define IS_TRIE_AC(op)              ((op)>=AHOCORASICK)
 
-/* these defines assume uniquecharcount is the correct variable, and state may be evaluated twice */
+/* these defines assume uniquecharcount is the correct
+   variable, and state may be evaluated twice */
 #define TRIE_NODENUM(state)         (((state)-1)/(trie->uniquecharcount)+1)
 #define SAFE_TRIE_NODENUM(state)    \
     ((state) ? (((state)-1)/(trie->uniquecharcount)+1) : (state))

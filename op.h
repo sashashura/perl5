@@ -286,7 +286,8 @@ struct pmop {
     union {
         OP          *op_pmreplstart;    /* Only used in OP_SUBST */
 #ifdef USE_ITHREADS
-        PADOFFSET   op_pmstashoff;      /* Only used in OP_MATCH, with PMf_ONCE set */
+        PADOFFSET   op_pmstashoff;      /* Only used in OP_MATCH,
+                                           with PMf_ONCE set */
 #else
         HV          *op_pmstash;
 #endif
@@ -370,7 +371,8 @@ struct pmop {
 /* keep 1st runtime pattern forever */
 #define PMf_KEEP                (1U<<(PMf_BASE_SHIFT+8))
 
-#define PMf_GLOBAL              (1U<<(PMf_BASE_SHIFT+9))    /* pattern had a g modifier */
+#define PMf_GLOBAL              (1U<<(PMf_BASE_SHIFT+9))    /* pattern had a g
+                                                               modifier */
 
 /* don't reset pos() if //g fails */
 #define PMf_CONTINUE            (1U<<(PMf_BASE_SHIFT+10))
@@ -392,7 +394,8 @@ struct pmop {
  * but the regex compilation API passes just the pm flags, not the op
  * itself */
 #define PMf_IS_QR               (1U<<(PMf_BASE_SHIFT+15))
-#define PMf_USE_RE_EVAL         (1U<<(PMf_BASE_SHIFT+16))   /* use re'eval' in scope */
+#define PMf_USE_RE_EVAL         (1U<<(PMf_BASE_SHIFT+16))   /* use re'eval'
+                                                               in scope */
 
 /* Means that this is a subpattern being compiled while processing a \p{}
  * wildcard.  This isn't called from op.c, but it is passed as a pm flag. */
@@ -738,7 +741,8 @@ struct opslot {
 struct opslab {
     OPSLAB  *opslab_next;       /* next slab */
     OPSLAB  *opslab_head;       /* first slab in chain */
-    OP      **opslab_freed;     /* array of sized chains of freed ops (head only)*/
+    OP      **opslab_freed;     /* array of sized chains of
+                                   freed ops (head only)*/
     size_t  opslab_refcnt;      /* number of ops (head slab only) */
     U16     opslab_freed_size;  /* allocated size of opslab_freed */
     U16     opslab_size;        /* size of slab in pointers,
@@ -873,7 +877,8 @@ preprocessing token; the type of C<arg> depends on C<which>.
 #define RV2CVOPCV_MARK_EARLY        0x00000001
 #define RV2CVOPCV_RETURN_NAME_GV    0x00000002
 #define RV2CVOPCV_RETURN_STUB       0x00000004
-#if defined(PERL_CORE) || defined(PERL_EXT) /* behaviour of this flag is subject to change: */
+#if defined(PERL_CORE) || defined(PERL_EXT) /* behaviour of this flag is
+                                               subject to change: */
 # define RV2CVOPCV_MAYBE_NAME_GV     0x00000008
 #endif
 #define RV2CVOPCV_FLAG_MASK     0x0000000f  /* all of the above */
@@ -1137,7 +1142,8 @@ C<sib> is non-null. For a higher-level interface, see C<L</op_sibling_splice>>.
 
 /* key / index type */
 
-#define MDEREF_INDEX_none                   0x00    /* run external ops to generate index */
+#define MDEREF_INDEX_none                   0x00    /* run external ops to
+                                                       generate index */
 #define MDEREF_INDEX_const                  0x10    /* index is const PV/UV */
 #define MDEREF_INDEX_padsv                  0x20    /* index is lexical var */
 #define MDEREF_INDEX_gvsv                   0x30    /* index is GV */
@@ -1146,7 +1152,8 @@ C<sib> is non-null. For a higher-level interface, see C<L</op_sibling_splice>>.
 
 /* bit flags */
 
-#define MDEREF_FLAG_last                    0x40    /* the last [ah]elem; PL_op flags apply */
+#define MDEREF_FLAG_last                    0x40    /* the last [ah]elem; PL_op
+                                                       flags apply */
 
 #define MDEREF_MASK                         0x7F
 #define MDEREF_SHIFT                           7
@@ -1159,11 +1166,13 @@ C<sib> is non-null. For a higher-level interface, see C<L</op_sibling_splice>>.
 #if defined(PERL_IN_OP_C) || defined(PERL_IN_DOOP_C) || defined(PERL_IN_PERL_C)
 #  define TR_UNMAPPED             (UV)-1
 #  define TR_DELETE               (UV)-2
-#  define TR_R_EMPTY              (UV)-3          /* rhs (replacement) is empty */
+#  define TR_R_EMPTY              (UV)-3          /* rhs (replacement)
+                                                     is empty */
 #  define TR_OOB                  (UV)-4          /* Something that isn't one
                                           of the others */
 #  define TR_SPECIAL_HANDLING     TR_DELETE       /* Can occupy same value */
-#  define TR_UNLISTED             TR_UNMAPPED     /* A synonym whose name is clearer
+#  define TR_UNLISTED             TR_UNMAPPED     /* A synonym whose name
+                                                     is clearer
                                                at times */
 #endif
 #if defined(PERL_IN_OP_C) || defined(PERL_IN_TOKE_C)

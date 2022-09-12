@@ -186,12 +186,15 @@ typedef struct {
 #define HSf_SETXSUBFN       0x00000020
 #define HSf_POPMARK         0x00000040  /* popmark mode or you must
                                   supply ax and items */
-#define HSf_IMP_CXT         0x00000080  /* ABI, threaded, MULTIPLICITY, pTHX_ present */
+#define HSf_IMP_CXT         0x00000080  /* ABI, threaded, MULTIPLICITY,
+                                           pTHX_ present */
 #define HSm_INTRPSIZE       0xFFFF0000  /* ABI, interp struct size */
-/* A mask of bits in the key which must always match between a XS mod and interp.
+/* A mask of bits in the key which must always
+   match between a XS mod and interp.
    Also if all ABI bits in a key are true, skip all ABI checks, it is very
    the unlikely interp size will all 1 bits */
-/* Maybe HSm_APIVERLEN one day if Perl_xs_apiversion_bootcheck is changed to a memcmp */
+/* Maybe HSm_APIVERLEN one day if Perl_xs_apiversion_bootcheck
+   is changed to a memcmp */
 #define HSm_KEY_MATCH                                                       (HSm_INTRPSIZE|HSf_IMP_CXT)
 #define HSf_NOCHK                                                           HSm_KEY_MATCH               /* if all ABI bits are 1 in
                                    the key, dont chk */
@@ -204,7 +207,8 @@ means arg not present, 1 is empty string/null byte */
 #define HS_GETXSVERLEN(key)                                                 ((U8) ((key) >> 8))
 #define HS_GETAPIVERLEN(key)                                                ((key) & HSm_APIVERLEN)
 
-/* internal to util.h macro to create a packed handshake key, all args must be constants */
+/* internal to util.h macro to create a packed handshake
+   key, all args must be constants */
 /* U32 return = (U16 interpsize, bool cxt, bool setxsubfn, bool popmark,
    U5 (FIVE!) apiverlen, U8 xsverlen) */
 #define HS_KEYp(interpsize, cxt, setxsubfn, popmark, apiverlen, xsverlen)       \

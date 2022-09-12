@@ -8,7 +8,8 @@
  *
  */
 
-/* These control hash traversal randomization and the environment variable PERL_PERTURB_KEYS.
+/* These control hash traversal randomization and
+   the environment variable PERL_PERTURB_KEYS.
  * Currently disabling this functionality will break a few tests, but should otherwise work fine.
  * See perlrun for more details. */
 
@@ -79,7 +80,8 @@ struct mro_alg {
     AV          *(*resolve)(pTHX_ HV* stash, U32 level);
     const char  *name;
     U16         length;
-    U16         kflags;                     /* For the hash API - set HVhek_UTF8 if name is UTF-8 */
+    U16         kflags;                     /* For the hash API - set HVhek_UTF8
+                                               if name is UTF-8 */
     U32         hash;                       /* or 0 */
 };
 
@@ -91,13 +93,19 @@ struct mro_meta {
        value stored in and owned by mro_linear_all.  */
     SV                      *mro_linear_current;
     HV                      *mro_nextmethod;        /* next::method caching */
-    U32                     cache_gen;              /* Bumping this invalidates our method cache */
-    U32                     pkg_gen;                /* Bumps when local methods/@ISA change */
-    const struct mro_alg    *mro_which;             /* which mro alg is in use? */
-    HV                      *isa;                   /* Everything this class @ISA */
+    U32                     cache_gen;              /* Bumping this invalidates
+                                                       our method cache */
+    U32                     pkg_gen;                /* Bumps when local
+                                                       methods/@ISA change */
+    const struct mro_alg    *mro_which;             /* which mro alg is
+                                                       in use? */
+    HV                      *isa;                   /* Everything this
+                                                       class @ISA */
     HV                      *super;                 /* SUPER method cache */
-    CV                      *destroy;               /* DESTROY method if destroy_gen non-zero */
-    U32                     destroy_gen;            /* Generation number of DESTROY cache */
+    CV                      *destroy;               /* DESTROY method if
+                                                       destroy_gen non-zero */
+    U32                     destroy_gen;            /* Generation number of
+                                                       DESTROY cache */
 };
 
 #define MRO_GET_PRIVATE_DATA(smeta, which)                  \
@@ -116,7 +124,8 @@ union _xhvnameu {
 
 struct xpvhv_aux {
     union _xhvnameu xhv_name_u;             /* name, if a symbol table */
-    AV              *xhv_backreferences;    /* back references for weak references */
+    AV              *xhv_backreferences;    /* back references for
+                                               weak references */
     HE              *xhv_eiter;             /* current entry of iterator */
     I32             xhv_riter;              /* current root of iterator */
 
@@ -129,15 +138,19 @@ struct xpvhv_aux {
     I32             xhv_name_count;
     struct mro_meta *xhv_mro_meta;
 #ifdef PERL_HASH_RANDOMIZE_KEYS
-    U32             xhv_rand;               /* random value for hash traversal */
-    U32             xhv_last_rand;          /* last random value for hash traversal,
+    U32             xhv_rand;               /* random value for hash
+                                               traversal */
+    U32             xhv_last_rand;          /* last random value for
+                                               hash traversal,
                                                used to detect each() after insert for warnings */
 #endif
     U32             xhv_aux_flags;          /* assorted extra flags */
 };
 
-#define HvAUXf_SCAN_STASH           0x1     /* stash is being scanned by gv_check */
-#define HvAUXf_NO_DEREF             0x2     /* @{}, %{} etc (and nomethod) not present */
+#define HvAUXf_SCAN_STASH           0x1     /* stash is being scanned
+                                               by gv_check */
+#define HvAUXf_NO_DEREF             0x2     /* @{}, %{} etc (and nomethod)
+                                               not present */
 
 /* hash structure: */
 /* This structure must match the beginning of struct xpvmg in sv.h. */
@@ -449,7 +462,8 @@ whether it is valid to call C<HvAUX()>.
 #define HEK_FLAGS(hek)  (*((unsigned char *)(HEK_KEY(hek))+HEK_LEN(hek)+1))
 
 #define HVhek_UTF8           0x01   /* Key is utf8 encoded. */
-#define HVhek_WASUTF8        0x02   /* Key is bytes here, but was supplied as utf8. */
+#define HVhek_WASUTF8        0x02   /* Key is bytes here, but was
+                                       supplied as utf8. */
 #define HVhek_NOTSHARED      0x04   /* This key isn't a shared hash key. */
 /* the following flags are options for functions, they are not stored in heks */
 #define HVhek_FREEKEY       0x100   /* Internal flag to say key is Newx()ed.  */
@@ -634,7 +648,8 @@ instead of a string/length pair, and no precomputed hash.
 
 /* Flag bits are HVhek_UTF8, HVhek_WASUTF8, then */
 #define HVrhek_undef        0x00    /* Value is undef. */
-#define HVrhek_delete       0x10    /* Value is placeholder - signifies delete. */
+#define HVrhek_delete       0x10    /* Value is placeholder -
+                                       signifies delete. */
 #define HVrhek_IV           0x20    /* Value is IV. */
 #define HVrhek_UV           0x30    /* Value is UV. */
 #define HVrhek_PV           0x40    /* Value is a (byte) string. */

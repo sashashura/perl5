@@ -238,13 +238,18 @@ Return the CV from the GV.
                                 if type != PVGV */
 /* This is used by toke.c to avoid turing placeholder constants in the symbol
    table into full PVGVs with attached constant subroutines.  */
-#define GV_NOADD_NOINIT           0x20  /* Don't add the symbol if it's not there.
+#define GV_NOADD_NOINIT           0x20  /* Don't add the symbol
+                                           if it's not there.
                                    Don't init it if it is there but ! PVGV */
-#define GV_NOEXPAND               0x40  /* Don't expand SvOK() entries to PVGV */
-#define GV_NOTQUAL                0x80  /* A plain symbol name, not qualified with a
+#define GV_NOEXPAND               0x40  /* Don't expand SvOK()
+                                           entries to PVGV */
+#define GV_NOTQUAL                0x80  /* A plain symbol name, not
+                                           qualified with a
                                    package (so skip checks for :: and ')  */
-#define GV_AUTOLOAD              0x100  /* gv_fetchmethod_flags() should AUTOLOAD  */
-#define GV_CROAK                 0x200  /* gv_fetchmethod_flags() should croak  */
+#define GV_AUTOLOAD              0x100  /* gv_fetchmethod_flags()
+                                           should AUTOLOAD */
+#define GV_CROAK                 0x200  /* gv_fetchmethod_flags()
+                                           should croak */
 #define GV_ADDMG                 0x400  /* add if magical */
 #define GV_NO_SVGMAGIC           0x800  /* Skip get-magic on an SV argument;
                                    used only by gv_fetchsv(_nomg) */

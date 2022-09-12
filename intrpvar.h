@@ -72,7 +72,8 @@ PERLVAR(I, multideref_pc, UNOP_AUX_item *)
 
 /* Fields used by magic variables such as $@, $/ and so on */
 PERLVAR(I, curpm,       PMOP *)         /* what to do \ interps in REs from */
-PERLVAR(I, curpm_under,        PMOP *)                /* what to do \ interps in REs from */
+PERLVAR(I, curpm_under,        PMOP *)                /* what to do \ interps
+                                                         in REs from */
 
 PERLVAR(I, tainting,    bool)           /* ? doing taint checks */
 PERLVARI(I, tainted,    bool, FALSE)    /* using variables controlled by $< */
@@ -172,10 +173,13 @@ PERLVAR(I, mainstack,   AV *)           /* the stack when nothing funny is
                                            happening */
 
 /* memory management */
-PERLVAR(I, sv_count,    IV)             /* how many SV* are currently allocated */
+PERLVAR(I, sv_count,    IV)             /* how many SV* are currently
+                                           allocated */
 
-PERLVAR(I, sv_root,     SV *)           /* storage for SVs belonging to interp */
-PERLVAR(I, sv_arenaroot, SV *)          /* list of areas for garbage collection */
+PERLVAR(I, sv_root,     SV *)           /* storage for SVs belonging
+                                           to interp */
+PERLVAR(I, sv_arenaroot, SV *)          /* list of areas for garbage
+                                           collection */
 
 /* fake PMOP that PL_curpm points to while in (?{}) so $1 et al are visible */
 PERLVARI(I, reg_curpm, PMOP*, NULL)
@@ -187,7 +191,8 @@ PERLVARI(I, reg_curpm, PMOP*, NULL)
 PERLVARI(I, regmatch_slab, regmatch_slab *,     NULL)
 PERLVAR(I, regmatch_state, regmatch_state *)
 
-PERLVAR(I, comppad,     PAD *)          /* storage for lexically scoped temporaries */
+PERLVAR(I, comppad,     PAD *)          /* storage for lexically scoped
+                                           temporaries */
 
 /*
 =for apidoc_section $SV
@@ -483,7 +488,8 @@ PERLVAR(I, perldb,      U32)
 
 PERLVAR(I, signals,     U32)    /* Using which pre-5.8 signals */
 
-PERLVAR(I, reentrant_retint, int)       /* Integer return value from reentrant functions */
+PERLVAR(I, reentrant_retint, int)       /* Integer return value from
+                                           reentrant functions */
 
 /* pseudo environmental stuff */
 PERLVAR(I, origargc,    int)
@@ -583,13 +589,16 @@ PERLVAR(I, DBsub,       GV *)           /*  *DB::sub    */
 PERLVAR(I, DBsingle,    SV *)           /*  $DB::single */
 PERLVAR(I, DBtrace,     SV *)           /*  $DB::trace  */
 PERLVAR(I, DBsignal,    SV *)           /*  $DB::signal */
-PERLVAR(I, dbargs,      AV *)           /* args to call listed by caller function */
+PERLVAR(I, dbargs,      AV *)           /* args to call listed by
+                                           caller function */
 
-PERLVARA(I, DBcontrol,    DBVARMG_COUNT, IV) /* IV versions of $DB::single, trace, signal */
+PERLVARA(I, DBcontrol,    DBVARMG_COUNT, IV) /* IV versions of $DB::single,
+                                                trace, signal */
 
 /* symbol tables */
 PERLVAR(I, debstash,    HV *)           /* symbol table for perldb package */
-PERLVAR(I, globalstash, HV *)           /* global keyword overrides imported here */
+PERLVAR(I, globalstash, HV *)           /* global keyword overrides
+                                           imported here */
 PERLVAR(I, curstname,   SV *)           /* name of current package */
 PERLVAR(I, beginav,     AV *)           /* names of BEGIN subroutines */
 PERLVAR(I, endav,       AV *)           /* names of END subroutines */
@@ -598,7 +607,8 @@ PERLVAR(I, checkav,     AV *)           /* names of CHECK subroutines */
 PERLVAR(I, initav,      AV *)           /* names of INIT subroutines */
 
 /* subprocess state */
-PERLVAR(I, fdpid,       AV *)           /* keep fd-to-pid mappings for my_popen */
+PERLVAR(I, fdpid,       AV *)           /* keep fd-to-pid mappings
+                                           for my_popen */
 
 /* internal state */
 PERLVARI(I, op_mask,    char *, NULL)   /* masked operations for safe evals */
@@ -629,7 +639,8 @@ PERLVAR(I, forkprocess, int)            /* so do_open |- can return proc# */
 
 /* statics moved here for shared library purposes */
 PERLVARI(I, gensym,     I32,    0)      /* next symbol for getsym() to define */
-PERLVARI(I, cv_has_eval, bool, FALSE)   /* PL_compcv includes an entereval or similar */
+PERLVARI(I, cv_has_eval, bool, FALSE)   /* PL_compcv includes an entereval
+                                           or similar */
 PERLVAR(I, taint_warn,  bool)           /* taint warns instead of dying */
 PERLVARI(I, laststype,  U16,    OP_STAT)
 
@@ -669,7 +680,8 @@ PERLVAR(I, compiling,   COP)            /* compiling/done executing marker */
 
 PERLVAR(I, compcv,      CV *)           /* currently compiling subroutine */
 PERLVAR(I, comppad_name, PADNAMELIST *) /* variable names for "my" variables */
-PERLVAR(I, comppad_name_fill,   PADOFFSET)/* last "introduced" variable offset */
+PERLVAR(I, comppad_name_fill,   PADOFFSET)/* last "introduced" variable
+                                             offset */
 PERLVAR(I, comppad_name_floor,  PADOFFSET)/* start of vars in innermost block */
 
 #ifdef HAVE_INTERP_INTERN
@@ -685,15 +697,20 @@ PERLVARI(I, generation, int,    100)    /* scan sequence# for OP_AASSIGN
 PERLVAR(I, unicode, U32)        /* Unicode features: $ENV{PERL_UNICODE} or -C */
 
 PERLVARI(I, in_clean_objs,bool,    FALSE)       /* from sv.c */
-PERLVARI(I, in_clean_all, bool,    FALSE)       /* ptrs to freed SVs now legal */
+PERLVARI(I, in_clean_all, bool,    FALSE)       /* ptrs to freed SVs
+                                                   now legal */
 PERLVAR(I, nomemok,     bool)           /* let malloc context handle nomem */
 PERLVARI(I, savebegin,  bool,   FALSE)  /* save BEGINs for compiler     */
 
 
-PERLVAR(I, delaymagic_uid,      Uid_t)  /* current real user id, only for delaymagic */
-PERLVAR(I, delaymagic_euid,     Uid_t)  /* current effective user id, only for delaymagic */
-PERLVAR(I, delaymagic_gid,      Gid_t)  /* current real group id, only for delaymagic */
-PERLVAR(I, delaymagic_egid,     Gid_t)  /* current effective group id, only for delaymagic */
+PERLVAR(I, delaymagic_uid,      Uid_t)  /* current real user id, only
+                                           for delaymagic */
+PERLVAR(I, delaymagic_euid,     Uid_t)  /* current effective user id,
+                                           only for delaymagic */
+PERLVAR(I, delaymagic_gid,      Gid_t)  /* current real group id, only
+                                           for delaymagic */
+PERLVAR(I, delaymagic_egid,     Gid_t)  /* current effective group id,
+                                           only for delaymagic */
 PERLVARI(I, an,         U32,    0)      /* malloc sequence number */
 
 /* Perl_Ibreakable_sub_generation_ptr was too long for VMS, hence "gen"  */
@@ -739,7 +756,8 @@ PERLVAR(I, padix,       PADOFFSET)      /* lowest unused index - 1
                                            in current "register" pad */
 PERLVAR(I, constpadix,  PADOFFSET)      /* lowest unused for constants */
 
-PERLVAR(I, padix_floor, PADOFFSET)      /* how low may inner block reset padix */
+PERLVAR(I, padix_floor, PADOFFSET)      /* how low may inner block
+                                           reset padix */
 
 #ifdef USE_PL_CURLOCALES
 
@@ -785,7 +803,8 @@ PERLVAR(I, sawampersand, U8)            /* must save all match strings */
    bytes.  */
 PERLVARI(I, phase,      enum perl_phase, PERL_PHASE_CONSTRUCT)
 
-PERLVARI(I, in_load_module, bool, FALSE)        /* to prevent recursions in PerlIO_find_layer */
+PERLVARI(I, in_load_module, bool, FALSE)        /* to prevent recursions in
+                                                   PerlIO_find_layer */
 
 PERLVARI(I, eval_begin_nest_depth, U32, 0)
 
@@ -824,8 +843,10 @@ PERLVARI(I, perl_destruct_level, signed char,   0)
 
 PERLVAR(I, pad_reset_pending, bool)     /* reset pad on next attempted alloc */
 
-PERLVARI(I, srand_called, bool, false)      /* has random_state been initialized yet? */
-PERLVARI(I, srand_override, U32, 0)         /* Should we use a deterministic sequence? */
+PERLVARI(I, srand_called, bool, false)      /* has random_state been
+                                               initialized yet? */
+PERLVARI(I, srand_override, U32, 0)         /* Should we use a deterministic
+                                               sequence? */
 PERLVARI(I, srand_override_next, U32, 0)    /* Next item in the sequence */
 
 PERLVARI(I, numeric_underlying, bool, TRUE)
@@ -835,7 +856,8 @@ PERLVARI(I, numeric_underlying_is_standard, bool, TRUE)
 PERLVARI(I, numeric_standard, int, TRUE)    /* Assume C locale numerics */
 PERLVAR(I, numeric_name, char *)     /* Name of current numeric locale */
 PERLVAR(I, numeric_radix_sv, SV *)      /* The radix separator */
-PERLVAR(I, underlying_radix_sv, SV *)   /* The radix in the program's current underlying locale */
+PERLVAR(I, underlying_radix_sv, SV *)   /* The radix in the program's current
+                                           underlying locale */
 
 #if defined(USE_LOCALE_NUMERIC) && defined(USE_POSIX_2008_LOCALE)
 
@@ -908,7 +930,8 @@ PERLVARI(I, checkav_save, AV *, NULL)   /* save CHECK{}s when compiling */
 PERLVARI(I, unitcheckav_save, AV *, NULL)
                                         /* save UNITCHECK{}s when compiling */
 
-PERLVARI(I, clocktick,  long,   0)      /* this many times() ticks in a second */
+PERLVARI(I, clocktick,  long,   0)      /* this many times() ticks
+                                           in a second */
 
 /* Hooks to shared SVs and locks. */
 PERLVARI(I, sharehook,  share_proc_t, Perl_sv_nosharing)
@@ -953,7 +976,8 @@ PERLVAR(I, Xpv,         XPV *)          /* (unused) held temporary value */
    present always, as -DDEBUGGING must be binary compatible with non.  */
 PERLVARI(I, scopestack_name, const char **, NULL)
 
-PERLVAR(I, debug_pad,   struct perl_debug_pad)  /* always needed because of the re extension */
+PERLVAR(I, debug_pad,   struct perl_debug_pad)  /* always needed because of
+                                                   the re extension */
 
 /* Hook for File::Glob */
 PERLVARI(I, globhook,   globhook_t, NULL)
@@ -967,7 +991,8 @@ PERLVARI(I, globhook,   globhook_t, NULL)
 #endif
 
 #ifdef MULTIPLICITY
-PERLVARI(I, my_cxt_list, void **, NULL) /* per-module array of MY_CXT pointers */
+PERLVARI(I, my_cxt_list, void **, NULL) /* per-module array of
+                                           MY_CXT pointers */
 PERLVARI(I, my_cxt_size, int,   0)      /* size of PL_my_cxt_list */
 #endif
 
@@ -989,10 +1014,12 @@ PERLVARI(I, dumper_fd,  int,    -1)
 PERLVARI(I, sv_serial,  U32,    0)      /* SV serial number, used in sv.c */
 #endif
 
-PERLVARA(I, sv_consts, SV_CONSTS_COUNT, SV*)    /* constant SVs with precomputed hash value */
+PERLVARA(I, sv_consts, SV_CONSTS_COUNT, SV*)    /* constant SVs with precomputed
+                                                   hash value */
 
 #ifdef PERL_TRACE_OPS
-PERLVARA(I, op_exec_cnt, OP_max+2, UV)  /* Counts of executed OPs of the given type.
+PERLVARA(I, op_exec_cnt, OP_max+2, UV)  /* Counts of executed OPs
+                                           of the given type.
                                            If PERL_TRACE_OPS is enabled, we'll dump
                                            a summary count of all ops executed in the
                                            program at perl_destruct time. Used only

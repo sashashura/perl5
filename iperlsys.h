@@ -285,7 +285,8 @@ struct IPerlStdIOInfo
 #  define PerlSIO_stderr                  stderr
 #  define PerlSIO_fopen(x,y)              fopen(x,y)
 #  ifdef __VOS__
-   /* Work around VOS bug posix-979, wrongly setting errno when at end of file. */
+   /* Work around VOS bug posix-979, wrongly
+      setting errno when at end of file. */
 #    define PerlSIO_fclose(f)   (((errno==1025)?errno=0:0),fclose(f))
 #    define PerlSIO_feof(f) \
          (((errno==1025)?errno=0:0),feof(f))

@@ -32,7 +32,8 @@
 #define RXf_PMf_SINGLELINE          (1U << (RXf_PMf_STD_PMMOD_SHIFT+1)) /* /s */
 #define RXf_PMf_FOLD                (1U << (RXf_PMf_STD_PMMOD_SHIFT+2)) /* /i */
 #define RXf_PMf_EXTENDED            (1U << (RXf_PMf_STD_PMMOD_SHIFT+3)) /* /x */
-#define RXf_PMf_EXTENDED_MORE       (1U << (RXf_PMf_STD_PMMOD_SHIFT+4)) /* /xx */
+#define RXf_PMf_EXTENDED_MORE       (1U << (RXf_PMf_STD_PMMOD_SHIFT+4)) /* /xx
+                                                                           */
 #define RXf_PMf_NOCAPTURE           (1U << (RXf_PMf_STD_PMMOD_SHIFT+5)) /* /n */
 
 #define RXf_PMf_KEEPCOPY            (1U << (RXf_PMf_STD_PMMOD_SHIFT+6)) /* /p */
@@ -52,7 +53,8 @@ typedef enum {
 } regex_charset;
 
 #define _RXf_PMf_CHARSET_SHIFT      ((RXf_PMf_STD_PMMOD_SHIFT)+7)
-#define RXf_PMf_CHARSET             (7U << (_RXf_PMf_CHARSET_SHIFT)) /* 3 bits */
+#define RXf_PMf_CHARSET             (7U << (_RXf_PMf_CHARSET_SHIFT)) /* 3
+                                                                        bits */
 
 /* Manually decorate these functions here with gcc-style attributes just to
  * avoid making the regex_charset typedef global, which it would need to be for

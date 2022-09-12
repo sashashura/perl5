@@ -559,7 +559,8 @@ encoded as UTF-8.  C<cp> is a native (ASCII or EBCDIC) code point if less than
  */
 #define UVCHR_SKIP(uv)                  OFFUNISKIP(NATIVE_TO_UNI(uv))
 
-#define NATIVE_SKIP(uv)                 UVCHR_SKIP(uv)                  /* Old terminology */
+#define NATIVE_SKIP(uv)                 UVCHR_SKIP(uv)                  /* Old
+                                                                  terminology */
 
 /* Most code which says UNISKIP is really thinking in terms of native code
  * points (0-255) plus all those beyond.  This is an imprecise term, but having
