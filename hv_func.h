@@ -24,9 +24,9 @@
 
 #ifndef PERL_HASH_USE_SBOX32_ALSO
 #  if defined(PERL_HASH_USE_SBOX32) || !defined(PERL_HASH_NO_SBOX32)
-#    define PERL_HASH_USE_SBOX32_ALSO 1
+#    define PERL_HASH_USE_SBOX32_ALSO   1
 #  else
-#    define PERL_HASH_USE_SBOX32_ALSO 0
+#    define PERL_HASH_USE_SBOX32_ALSO   0
 #  endif
 #endif
 
@@ -39,42 +39,42 @@
 #endif
 
 #ifndef SBOX32_MAX_LEN
-#define SBOX32_MAX_LEN 24
+#define SBOX32_MAX_LEN  24
 #endif
 
 /* this must be after the SBOX32_MAX_LEN define */
 #include "sbox32_hash.h"
 
 #if defined(PERL_HASH_FUNC_SIPHASH)
-# define PERL_HASH_FUNC_DEFINE "PERL_HASH_FUNC_SIPHASH"
-# define PVT__PERL_HASH_FUNC "SIPHASH_2_4"
-# define PVT__PERL_HASH_WORD_TYPE U64
-# define PVT__PERL_HASH_WORD_SIZE sizeof(PVT__PERL_HASH_WORD_TYPE)
-# define PVT__PERL_HASH_SEED_BYTES (PVT__PERL_HASH_WORD_SIZE * 2)
-# define PVT__PERL_HASH_STATE_BYTES (PVT__PERL_HASH_WORD_SIZE * 4)
+# define PERL_HASH_FUNC_DEFINE   "PERL_HASH_FUNC_SIPHASH"
+# define PVT__PERL_HASH_FUNC     "SIPHASH_2_4"
+# define PVT__PERL_HASH_WORD_TYPE                    U64
+# define PVT__PERL_HASH_WORD_SIZE                    sizeof(PVT__PERL_HASH_WORD_TYPE)
+# define PVT__PERL_HASH_SEED_BYTES                   (PVT__PERL_HASH_WORD_SIZE * 2)
+# define PVT__PERL_HASH_STATE_BYTES                  (PVT__PERL_HASH_WORD_SIZE * 4)
 # define PVT__PERL_HASH_SEED_STATE(seed,state)  \
       S_perl_siphash_seed_state(seed,state)
 # define PVT__PERL_HASH_WITH_STATE(state,str,len)   \
       S_perl_hash_siphash_2_4_with_state((state),(U8*)(str),(len))
 #elif defined(PERL_HASH_FUNC_SIPHASH13)
-# define PERL_HASH_FUNC_DEFINE "PERL_HASH_FUNC_SIPHASH13"
-# define PVT__PERL_HASH_FUNC "SIPHASH_1_3"
-# define PVT__PERL_HASH_WORD_TYPE U64
-# define PVT__PERL_HASH_WORD_SIZE sizeof(PVT__PERL_HASH_WORD_TYPE)
-# define PVT__PERL_HASH_SEED_BYTES (PVT__PERL_HASH_WORD_SIZE * 2)
-# define PVT__PERL_HASH_STATE_BYTES (PVT__PERL_HASH_WORD_SIZE * 4)
+# define PERL_HASH_FUNC_DEFINE   "PERL_HASH_FUNC_SIPHASH13"
+# define PVT__PERL_HASH_FUNC     "SIPHASH_1_3"
+# define PVT__PERL_HASH_WORD_TYPE                    U64
+# define PVT__PERL_HASH_WORD_SIZE                    sizeof(PVT__PERL_HASH_WORD_TYPE)
+# define PVT__PERL_HASH_SEED_BYTES                   (PVT__PERL_HASH_WORD_SIZE * 2)
+# define PVT__PERL_HASH_STATE_BYTES                  (PVT__PERL_HASH_WORD_SIZE * 4)
 # define PVT__PERL_HASH_SEED_STATE(seed,state)  \
       S_perl_siphash_seed_state(seed,state)
 # define PVT__PERL_HASH_WITH_STATE(state,str,len)   \
       S_perl_hash_siphash_1_3_with_state((state),(U8*)(str),(len))
 #elif defined(PERL_HASH_FUNC_ZAPHOD32)
-# define PERL_HASH_FUNC_DEFINE "PERL_HASH_FUNC_ZAPHOD32"
-# define PVT__PERL_HASH_FUNC "ZAPHOD32"
-# define PVT__PERL_HASH_WORD_TYPE U32
-# define PVT__PERL_HASH_WORD_SIZE sizeof(PVT__PERL_HASH_WORD_TYPE)
-# define PVT__PERL_HASH_SEED_BYTES (PVT__PERL_HASH_WORD_SIZE * 3)
-# define PVT__PERL_HASH_STATE_BYTES (PVT__PERL_HASH_WORD_SIZE * 3)
-# define PVT__PERL_HASH_SEED_STATE(seed,state) zaphod32_seed_state(seed,state)
+# define PERL_HASH_FUNC_DEFINE   "PERL_HASH_FUNC_ZAPHOD32"
+# define PVT__PERL_HASH_FUNC     "ZAPHOD32"
+# define PVT__PERL_HASH_WORD_TYPE                    U32
+# define PVT__PERL_HASH_WORD_SIZE                    sizeof(PVT__PERL_HASH_WORD_TYPE)
+# define PVT__PERL_HASH_SEED_BYTES                   (PVT__PERL_HASH_WORD_SIZE * 3)
+# define PVT__PERL_HASH_STATE_BYTES                  (PVT__PERL_HASH_WORD_SIZE * 3)
+# define PVT__PERL_HASH_SEED_STATE(seed,state)       zaphod32_seed_state(seed,state)
 # define PVT__PERL_HASH_WITH_STATE(state,str,len)   \
       (U32)zaphod32_hash_with_state((state),(U8*)(str),(len))
 # include "zaphod32_hash.h"
@@ -101,20 +101,20 @@
 #define PVT_PERL_HASH_SEED_roundup(x)   \
     PVT__PERL_HASH_SEED_roundup(x,PVT__PERL_HASH_WORD_SIZE)
 
-#define PL_hash_seed ((U8 *)PL_hash_seed_w)
-#define PL_hash_state ((U8 *)PL_hash_state_w)
+#define PL_hash_seed                        ((U8 *)PL_hash_seed_w)
+#define PL_hash_state                       ((U8 *)PL_hash_state_w)
 
 #if PERL_HASH_USE_SBOX32_ALSO == 0
-# define PVT_PERL_HASH_FUNC                        PVT__PERL_HASH_FUNC
-# define PVT_PERL_HASH_SEED_BYTES                  PVT__PERL_HASH_SEED_BYTES
-# define PVT_PERL_HASH_STATE_BYTES                 PVT__PERL_HASH_STATE_BYTES
+# define PVT_PERL_HASH_FUNC                          PVT__PERL_HASH_FUNC
+# define PVT_PERL_HASH_SEED_BYTES                    PVT__PERL_HASH_SEED_BYTES
+# define PVT_PERL_HASH_STATE_BYTES                   PVT__PERL_HASH_STATE_BYTES
 # define PVT_PERL_HASH_SEED_STATE(seed,state)   \
       PVT__PERL_HASH_SEED_STATE(seed,state)
 # define PVT_PERL_HASH_WITH_STATE(state,str,len)    \
       PVT__PERL_HASH_WITH_STATE(state,str,len)
 #else
 
-#define PVT_PERL_HASH_FUNC         "SBOX32_WITH_" PVT__PERL_HASH_FUNC
+#define PVT_PERL_HASH_FUNC  "SBOX32_WITH_" PVT__PERL_HASH_FUNC
 /* note the 4 in the below code comes from the fact the seed to initialize the SBOX is 128 bits */
 #define PVT_PERL_HASH_SEED_BYTES    \
     ( PVT__PERL_HASH_SEED_BYTES + (int)( 4 * sizeof(U32)) )
@@ -140,15 +140,15 @@
 #define PERL_HASH_WITH_STATE(state,hash,str,len)    \
     (hash) = PVT_PERL_HASH_WITH_STATE((state),(U8*)(str),(len))
 
-#define PERL_HASH_SEED_STATE(seed,state) PVT_PERL_HASH_SEED_STATE(seed,state)
+#define PERL_HASH_SEED_STATE(seed,state)            PVT_PERL_HASH_SEED_STATE(seed,state)
 #define PERL_HASH_SEED_BYTES    \
     PVT_PERL_HASH_SEED_roundup(PVT_PERL_HASH_SEED_BYTES)
 #define PERL_HASH_STATE_BYTES   \
     PVT_PERL_HASH_SEED_roundup(PVT_PERL_HASH_STATE_BYTES)
-#define PERL_HASH_FUNC        PVT_PERL_HASH_FUNC
+#define PERL_HASH_FUNC                              PVT_PERL_HASH_FUNC
 
-#define PERL_HASH_SEED_WORDS (PERL_HASH_SEED_BYTES/PVT__PERL_HASH_WORD_SIZE)
-#define PERL_HASH_STATE_WORDS (PERL_HASH_STATE_BYTES/PVT__PERL_HASH_WORD_SIZE)
+#define PERL_HASH_SEED_WORDS                        (PERL_HASH_SEED_BYTES/PVT__PERL_HASH_WORD_SIZE)
+#define PERL_HASH_STATE_WORDS                       (PERL_HASH_STATE_BYTES/PVT__PERL_HASH_WORD_SIZE)
 
 #ifdef PERL_USE_SINGLE_CHAR_HASH_CACHE
 #define PERL_HASH(state,str,len)                                                            \
@@ -167,7 +167,7 @@
 
 #ifndef PERL_HASH_SEED
 #   if defined(USE_HASH_SEED)
-#       define PERL_HASH_SEED PL_hash_seed
+#       define PERL_HASH_SEED  PL_hash_seed
 #   else
        /* this is a 512 bit seed, which should be more than enough for the
         * configuration of any of our hash functions (with or without sbox).
@@ -185,7 +185,7 @@
 
 /* legacy - only mod_perl should be doing this.  */
 #ifdef PERL_HASH_INTERNAL_ACCESS
-#define PERL_HASH_INTERNAL(hash,str,len) PERL_HASH(hash,str,len)
+#define PERL_HASH_INTERNAL(hash,str,len)    PERL_HASH(hash,str,len)
 #endif
 
 PERL_STATIC_INLINE U32

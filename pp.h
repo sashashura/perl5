@@ -8,7 +8,7 @@
  *
  */
 
-#define PP(s) OP * Perl_##s(pTHX)
+#define PP(s)               OP * Perl_##s(pTHX)
 
 /*
 =for apidoc_section $stack
@@ -51,8 +51,8 @@ Refetch the stack pointer.  Used after a callback.  See L<perlcall>.
 =cut */
 
 #undef SP /* Solaris 2.7 i386 has this in /usr/include/sys/reg.h */
-#define SP sp
-#define MARK mark
+#define SP                  sp
+#define MARK                mark
 
 /*
 =for apidoc Amn;||TARG
@@ -63,7 +63,7 @@ value for the OP, but some use it for other purposes.
 
 =cut
 */
-#define TARG targ
+#define TARG                targ
 
 #define PUSHMARK(p)                                                 \
     STMT_START {                                                    \
@@ -77,8 +77,8 @@ value for the OP, but some use it for other purposes.
                 PL_markstack_ptr, (IV)*mark_stack_entry)));         \
     } STMT_END
 
-#define TOPMARK Perl_TOPMARK(aTHX)
-#define POPMARK Perl_POPMARK(aTHX)
+#define TOPMARK             Perl_TOPMARK(aTHX)
+#define POPMARK             Perl_POPMARK(aTHX)
 
 #define INCMARK                                                     \
     STMT_START {                                                    \
@@ -88,21 +88,21 @@ value for the OP, but some use it for other purposes.
         PL_markstack_ptr++;                                         \
     } STMT_END
 
-#define dSP             SV **sp = PL_stack_sp
-#define djSP            dSP
-#define dMARK           SV **mark = PL_stack_base + POPMARK
-#define dORIGMARK       const I32 origmark = (I32)(mark - PL_stack_base)
-#define ORIGMARK        (PL_stack_base + origmark)
+#define dSP                 SV **sp = PL_stack_sp
+#define djSP                dSP
+#define dMARK               SV **mark = PL_stack_base + POPMARK
+#define dORIGMARK           const I32 origmark = (I32)(mark - PL_stack_base)
+#define ORIGMARK            (PL_stack_base + origmark)
 
-#define SPAGAIN         sp = PL_stack_sp
+#define SPAGAIN             sp = PL_stack_sp
 #define MSPAGAIN    \
     STMT_START { sp = PL_stack_sp; mark = ORIGMARK; } STMT_END
 
 #define GETTARGETSTACKED    \
     targ = (PL_op->op_flags & OPf_STACKED ? POPs : PAD_SV(PL_op->op_targ))
-#define dTARGETSTACKED SV * GETTARGETSTACKED
+#define dTARGETSTACKED      SV * GETTARGETSTACKED
 
-#define GETTARGET targ = PAD_SV(PL_op->op_targ)
+#define GETTARGET           targ = PAD_SV(PL_op->op_targ)
 
 /*
 =for apidoc Amn;||dTARGET
@@ -110,16 +110,16 @@ Declare that this function uses C<TARG>, and initializes it
 
 =cut
 */
-#define dTARGET SV * GETTARGET
+#define dTARGET             SV * GETTARGET
 
 #define GETATARGET  \
     targ = (PL_op->op_flags & OPf_STACKED ? sp[-1] : PAD_SV(PL_op->op_targ))
-#define dATARGET SV * GETATARGET
+#define dATARGET            SV * GETATARGET
 
-#define dTARG SV *targ
+#define dTARG               SV *targ
 
-#define NORMAL PL_op->op_next
-#define DIE return Perl_die
+#define NORMAL              PL_op->op_next
+#define DIE                 return Perl_die
 
 /*
 =for apidoc Amn;||PUTBACK
@@ -157,32 +157,32 @@ Pops an unsigned long off the stack.
 =cut
 */
 
-#define PUTBACK         PL_stack_sp = sp
-#define RETURN          return (PUTBACK, NORMAL)
-#define RETURNOP(o)     return (PUTBACK, o)
-#define RETURNX(x)      return (x, PUTBACK, NORMAL)
+#define PUTBACK             PL_stack_sp = sp
+#define RETURN              return (PUTBACK, NORMAL)
+#define RETURNOP(o)         return (PUTBACK, o)
+#define RETURNX(x)          return (x, PUTBACK, NORMAL)
 
-#define POPs            (*sp--)
-#define POPp            POPpx
-#define POPpx           (SvPVx_nolen(POPs))
-#define POPpconstx      (SvPVx_nolen_const(POPs))
-#define POPpbytex       (SvPVbytex_nolen(POPs))
-#define POPn            (SvNVx(POPs))
-#define POPi            ((IV)SvIVx(POPs))
-#define POPu            ((UV)SvUVx(POPs))
-#define POPl            ((long)SvIVx(POPs))
-#define POPul           ((unsigned long)SvIVx(POPs))
+#define POPs                (*sp--)
+#define POPp                POPpx
+#define POPpx               (SvPVx_nolen(POPs))
+#define POPpconstx          (SvPVx_nolen_const(POPs))
+#define POPpbytex           (SvPVbytex_nolen(POPs))
+#define POPn                (SvNVx(POPs))
+#define POPi                ((IV)SvIVx(POPs))
+#define POPu                ((UV)SvUVx(POPs))
+#define POPl                ((long)SvIVx(POPs))
+#define POPul               ((unsigned long)SvIVx(POPs))
 
-#define TOPs            (*sp)
-#define TOPm1s          (*(sp-1))
-#define TOPp1s          (*(sp+1))
-#define TOPp            TOPpx
-#define TOPpx           (SvPV_nolen(TOPs))
-#define TOPn            (SvNV(TOPs))
-#define TOPi            ((IV)SvIV(TOPs))
-#define TOPu            ((UV)SvUV(TOPs))
-#define TOPl            ((long)SvIV(TOPs))
-#define TOPul           ((unsigned long)SvUV(TOPs))
+#define TOPs                (*sp)
+#define TOPm1s              (*(sp-1))
+#define TOPp1s              (*(sp+1))
+#define TOPp                TOPpx
+#define TOPpx               (SvPV_nolen(TOPs))
+#define TOPn                (SvNV(TOPs))
+#define TOPi                ((IV)SvIV(TOPs))
+#define TOPu                ((UV)SvUV(TOPs))
+#define TOPl                ((long)SvIV(TOPs))
+#define TOPul               ((unsigned long)SvUV(TOPs))
 
 /* Go to some pains in the rare event that we must extend the stack. */
 
@@ -342,7 +342,7 @@ Does not use C<TARG>.  See also C<L</XPUSHu>>, C<L</mPUSHu>> and C<L</PUSHu>>.
                PL_curstackinfo->si_stack_hwm = extend_hwm_set_ix;   \
        } STMT_END
 #else
-#  define EXTEND_HWM_SET(p, n) NOOP
+#  define EXTEND_HWM_SET(p, n)    NOOP
 #endif
 
 /* _EXTEND_SAFE_N(n): private helper macro for EXTEND().
@@ -356,7 +356,7 @@ Does not use C<TARG>.  See also C<L</XPUSHu>>, C<L</mPUSHu>> and C<L</PUSHu>>.
     (sizeof(n) > sizeof(SSize_t) && ((SSize_t)(n) != (n)) ? -1 : (n))
 
 #ifdef STRESS_REALLOC
-# define EXTEND_SKIP(p, n) EXTEND_HWM_SET(p, n)
+# define EXTEND_SKIP(p, n)   EXTEND_HWM_SET(p, n)
 
 # define EXTEND(p,n)                                \
       STMT_START {                                  \
@@ -389,7 +389,7 @@ Does not use C<TARG>.  See also C<L</XPUSHu>>, C<L</mPUSHu>> and C<L</PUSHu>>.
  * this just gives a safe false positive
  */
 
-#  define _EXTEND_NEEDS_GROW(p,n) ((n) < 0 || PL_stack_max - (p) < (n))
+#  define _EXTEND_NEEDS_GROW(p,n)     ((n) < 0 || PL_stack_max - (p) < (n))
 
 
 /* EXTEND_SKIP(): used for where you would normally call EXTEND(), but
@@ -495,62 +495,62 @@ Does not use C<TARG>.  See also C<L</XPUSHu>>, C<L</mPUSHu>> and C<L</PUSHu>>.
             sv_setnv_mg(targ, TARGn_nv);                                \
     } STMT_END
 
-#define PUSHs(s)        (*++sp = (s))
-#define PUSHTARG        STMT_START { SvSETMAGIC(TARG); PUSHs(TARG); } STMT_END
+#define PUSHs(s)                (*++sp = (s))
+#define PUSHTARG                STMT_START { SvSETMAGIC(TARG); PUSHs(TARG); } STMT_END
 #define PUSHp(p,l)  \
     STMT_START { sv_setpvn(TARG, (p), (l)); PUSHTARG; } STMT_END
-#define PUSHpvs(s)      PUSHp("" s "", sizeof(s)-1)
-#define PUSHn(n)        STMT_START { TARGn(n,1); PUSHs(TARG); } STMT_END
-#define PUSHi(i)        STMT_START { TARGi(i,1); PUSHs(TARG); } STMT_END
-#define PUSHu(u)        STMT_START { TARGu(u,1); PUSHs(TARG); } STMT_END
+#define PUSHpvs(s)              PUSHp("" s "", sizeof(s)-1)
+#define PUSHn(n)                STMT_START { TARGn(n,1); PUSHs(TARG); } STMT_END
+#define PUSHi(i)                STMT_START { TARGi(i,1); PUSHs(TARG); } STMT_END
+#define PUSHu(u)                STMT_START { TARGu(u,1); PUSHs(TARG); } STMT_END
 
-#define XPUSHs(s)       STMT_START { EXTEND(sp,1); *++sp = (s); } STMT_END
-#define XPUSHTARG       STMT_START { SvSETMAGIC(TARG); XPUSHs(TARG); } STMT_END
+#define XPUSHs(s)               STMT_START { EXTEND(sp,1); *++sp = (s); } STMT_END
+#define XPUSHTARG               STMT_START { SvSETMAGIC(TARG); XPUSHs(TARG); } STMT_END
 #define XPUSHp(p,l) \
     STMT_START { sv_setpvn(TARG, (p), (l)); XPUSHTARG; } STMT_END
-#define XPUSHpvs(s)     XPUSHp("" s "", sizeof(s)-1)
-#define XPUSHn(n)       STMT_START { TARGn(n,1); XPUSHs(TARG); } STMT_END
-#define XPUSHi(i)       STMT_START { TARGi(i,1); XPUSHs(TARG); } STMT_END
-#define XPUSHu(u)       STMT_START { TARGu(u,1); XPUSHs(TARG); } STMT_END
-#define XPUSHundef      STMT_START { SvOK_off(TARG); XPUSHs(TARG); } STMT_END
+#define XPUSHpvs(s)             XPUSHp("" s "", sizeof(s)-1)
+#define XPUSHn(n)               STMT_START { TARGn(n,1); XPUSHs(TARG); } STMT_END
+#define XPUSHi(i)               STMT_START { TARGi(i,1); XPUSHs(TARG); } STMT_END
+#define XPUSHu(u)               STMT_START { TARGu(u,1); XPUSHs(TARG); } STMT_END
+#define XPUSHundef              STMT_START { SvOK_off(TARG); XPUSHs(TARG); } STMT_END
 
-#define mPUSHs(s)       PUSHs(sv_2mortal(s))
-#define PUSHmortal      PUSHs(sv_newmortal())
-#define mPUSHp(p,l)     PUSHs(newSVpvn_flags((p), (l), SVs_TEMP))
-#define mPUSHpvs(s)     mPUSHp("" s "", sizeof(s)-1)
-#define mPUSHn(n)       sv_setnv(PUSHmortal, (NV)(n))
-#define mPUSHi(i)       sv_setiv(PUSHmortal, (IV)(i))
-#define mPUSHu(u)       sv_setuv(PUSHmortal, (UV)(u))
+#define mPUSHs(s)               PUSHs(sv_2mortal(s))
+#define PUSHmortal              PUSHs(sv_newmortal())
+#define mPUSHp(p,l)             PUSHs(newSVpvn_flags((p), (l), SVs_TEMP))
+#define mPUSHpvs(s)             mPUSHp("" s "", sizeof(s)-1)
+#define mPUSHn(n)               sv_setnv(PUSHmortal, (NV)(n))
+#define mPUSHi(i)               sv_setiv(PUSHmortal, (IV)(i))
+#define mPUSHu(u)               sv_setuv(PUSHmortal, (UV)(u))
 
-#define mXPUSHs(s)      XPUSHs(sv_2mortal(s))
-#define XPUSHmortal     XPUSHs(sv_newmortal())
-#define mXPUSHp(p,l)    STMT_START { EXTEND(sp,1); mPUSHp((p), (l)); } STMT_END
-#define mXPUSHpvs(s)    mXPUSHp("" s "", sizeof(s)-1)
-#define mXPUSHn(n)      STMT_START { EXTEND(sp,1); mPUSHn(n); } STMT_END
-#define mXPUSHi(i)      STMT_START { EXTEND(sp,1); mPUSHi(i); } STMT_END
-#define mXPUSHu(u)      STMT_START { EXTEND(sp,1); mPUSHu(u); } STMT_END
+#define mXPUSHs(s)              XPUSHs(sv_2mortal(s))
+#define XPUSHmortal             XPUSHs(sv_newmortal())
+#define mXPUSHp(p,l)            STMT_START { EXTEND(sp,1); mPUSHp((p), (l)); } STMT_END
+#define mXPUSHpvs(s)            mXPUSHp("" s "", sizeof(s)-1)
+#define mXPUSHn(n)              STMT_START { EXTEND(sp,1); mPUSHn(n); } STMT_END
+#define mXPUSHi(i)              STMT_START { EXTEND(sp,1); mPUSHi(i); } STMT_END
+#define mXPUSHu(u)              STMT_START { EXTEND(sp,1); mPUSHu(u); } STMT_END
 
-#define SETs(s)         (*sp = s)
-#define SETTARG         STMT_START { SvSETMAGIC(TARG); SETs(TARG); } STMT_END
+#define SETs(s)                 (*sp = s)
+#define SETTARG                 STMT_START { SvSETMAGIC(TARG); SETs(TARG); } STMT_END
 #define SETp(p,l)   \
     STMT_START { sv_setpvn(TARG, (p), (l)); SETTARG; } STMT_END
-#define SETn(n)         STMT_START { TARGn(n,1); SETs(TARG); } STMT_END
-#define SETi(i)         STMT_START { TARGi(i,1); SETs(TARG); } STMT_END
-#define SETu(u)         STMT_START { TARGu(u,1); SETs(TARG); } STMT_END
+#define SETn(n)                 STMT_START { TARGn(n,1); SETs(TARG); } STMT_END
+#define SETi(i)                 STMT_START { TARGi(i,1); SETs(TARG); } STMT_END
+#define SETu(u)                 STMT_START { TARGu(u,1); SETs(TARG); } STMT_END
 
-#define dTOPss          SV *sv = TOPs
-#define dPOPss          SV *sv = POPs
-#define dTOPnv          NV value = TOPn
-#define dPOPnv          NV value = POPn
-#define dPOPnv_nomg     NV value = (sp--, SvNV_nomg(TOPp1s))
-#define dTOPiv          IV value = TOPi
-#define dPOPiv          IV value = POPi
-#define dTOPuv          UV value = TOPu
-#define dPOPuv          UV value = POPu
+#define dTOPss                  SV *sv = TOPs
+#define dPOPss                  SV *sv = POPs
+#define dTOPnv                  NV value = TOPn
+#define dPOPnv                  NV value = POPn
+#define dPOPnv_nomg             NV value = (sp--, SvNV_nomg(TOPp1s))
+#define dTOPiv                  IV value = TOPi
+#define dPOPiv                  IV value = POPi
+#define dTOPuv                  UV value = TOPu
+#define dPOPuv                  UV value = POPu
 
-#define dPOPXssrl(X)    SV *right = POPs; SV *left = CAT2(X,s)
-#define dPOPXnnrl(X)    NV right = POPn; NV left = CAT2(X,n)
-#define dPOPXiirl(X)    IV right = POPi; IV left = CAT2(X,i)
+#define dPOPXssrl(X)            SV *right = POPs; SV *left = CAT2(X,s)
+#define dPOPXnnrl(X)            NV right = POPn; NV left = CAT2(X,n)
+#define dPOPXiirl(X)            IV right = POPi; IV left = CAT2(X,i)
 
 #define USE_LEFT(sv)    \
     (SvOK(sv) || !(PL_op->op_flags & OPf_STACKED))
@@ -559,31 +559,31 @@ Does not use C<TARG>.  See also C<L</XPUSHu>>, C<L</mPUSHu>> and C<L</PUSHu>>.
     SV *leftsv = CAT2(X,s);                 \
     IV left = USE_LEFT(leftsv) ? SvIV_nomg(leftsv) : 0
 
-#define dPOPPOPssrl     dPOPXssrl(POP)
-#define dPOPPOPnnrl     dPOPXnnrl(POP)
-#define dPOPPOPiirl     dPOPXiirl(POP)
+#define dPOPPOPssrl             dPOPXssrl(POP)
+#define dPOPPOPnnrl             dPOPXnnrl(POP)
+#define dPOPPOPiirl             dPOPXiirl(POP)
 
-#define dPOPTOPssrl     dPOPXssrl(TOP)
-#define dPOPTOPnnrl     dPOPXnnrl(TOP)
+#define dPOPTOPssrl             dPOPXssrl(TOP)
+#define dPOPTOPnnrl             dPOPXnnrl(TOP)
 #define dPOPTOPnnrl_nomg    \
     NV right = SvNV_nomg(TOPs); NV left = (sp--, SvNV_nomg(TOPs))
-#define dPOPTOPiirl     dPOPXiirl(TOP)
-#define dPOPTOPiirl_ul_nomg dPOPXiirl_ul_nomg(TOP)
+#define dPOPTOPiirl             dPOPXiirl(TOP)
+#define dPOPTOPiirl_ul_nomg     dPOPXiirl_ul_nomg(TOP)
 #define dPOPTOPiirl_nomg    \
     IV right = SvIV_nomg(TOPs); IV left = (sp--, SvIV_nomg(TOPs))
 
-#define RETPUSHYES      RETURNX(PUSHs(&PL_sv_yes))
-#define RETPUSHNO       RETURNX(PUSHs(&PL_sv_no))
-#define RETPUSHUNDEF    RETURNX(PUSHs(&PL_sv_undef))
+#define RETPUSHYES              RETURNX(PUSHs(&PL_sv_yes))
+#define RETPUSHNO               RETURNX(PUSHs(&PL_sv_no))
+#define RETPUSHUNDEF            RETURNX(PUSHs(&PL_sv_undef))
 
-#define RETSETYES       RETURNX(SETs(&PL_sv_yes))
-#define RETSETNO        RETURNX(SETs(&PL_sv_no))
-#define RETSETUNDEF     RETURNX(SETs(&PL_sv_undef))
-#define RETSETTARG      STMT_START { SETTARG; RETURN; } STMT_END
+#define RETSETYES               RETURNX(SETs(&PL_sv_yes))
+#define RETSETNO                RETURNX(SETs(&PL_sv_no))
+#define RETSETUNDEF             RETURNX(SETs(&PL_sv_undef))
+#define RETSETTARG              STMT_START { SETTARG; RETURN; } STMT_END
 
-#define ARGTARG         PL_op->op_targ
+#define ARGTARG                 PL_op->op_targ
 
-#define MAXARG          (PL_op->op_private & OPpARG4_MASK)
+#define MAXARG                  (PL_op->op_private & OPpARG4_MASK)
 
 #define SWITCHSTACK(f,t)                                \
     STMT_START {                                        \
@@ -601,10 +601,10 @@ Does not use C<TARG>.  See also C<L</XPUSHu>>, C<L</mPUSHu>> and C<L</PUSHu>>.
             (void)Perl_tmps_grow_p(aTHX_ eMiX); \
     } STMT_END
 
-#define AMGf_noright    1
-#define AMGf_noleft     2
-#define AMGf_assign     4       /* op supports mutator variant, e.g. $x += 1 */
-#define AMGf_unary      8
+#define AMGf_noright       1
+#define AMGf_noleft        2
+#define AMGf_assign        4    /* op supports mutator variant, e.g. $x += 1 */
+#define AMGf_unary         8
 #define AMGf_numeric    0x10    /* for Perl_try_amagic_bin */
 
 #define AMGf_want_list  0x40
@@ -630,7 +630,7 @@ Does not use C<TARG>.  See also C<L</XPUSHu>>, C<L</mPUSHu>> and C<L</PUSHu>>.
     amagic_call(sv,&PL_sv_undef, meth, AMGf_noright | AMGf_unary)
 
 /* No longer used in core. Use AMG_CALLunary instead */
-#define AMG_CALLun(sv,meth) AMG_CALLunary(sv, CAT2(meth,_amg))
+#define AMG_CALLun(sv,meth)                 AMG_CALLunary(sv, CAT2(meth,_amg))
 
 #define tryAMAGICunTARGETlist(meth, jump)                       \
     STMT_START {                                                \
@@ -687,14 +687,14 @@ Does not use C<TARG>.  See also C<L</XPUSHu>>, C<L</mPUSHu>> and C<L</PUSHu>>.
 
 
 /* 2019: no longer used in core */
-#define opASSIGN (PL_op->op_flags & OPf_STACKED)
+#define opASSIGN                            (PL_op->op_flags & OPf_STACKED)
 
 /*
 =for apidoc mnU||LVRET
 True if this op will be the return value of an lvalue subroutine
 
 =cut */
-#define LVRET ((PL_op->op_private & OPpMAYBE_LVSUB) && is_lvalue_sub())
+#define LVRET                               ((PL_op->op_private & OPpMAYBE_LVSUB) && is_lvalue_sub())
 
 #define SvCANEXISTDELETE(sv)                                        \
     (!SvRMAGICAL(sv)                                                \
@@ -710,9 +710,9 @@ True if this op will be the return value of an lvalue subroutine
 /* These are just for Perl_tied_method(), which is not part of the public API.
    Use 0x04 rather than the next available bit, to help the compiler if the
    architecture can generate more efficient instructions.  */
-#  define TIED_METHOD_MORTALIZE_NOT_NEEDED      0x04
-#  define TIED_METHOD_ARGUMENTS_ON_STACK        0x08
-#  define TIED_METHOD_SAY                       0x10
+#  define TIED_METHOD_MORTALIZE_NOT_NEEDED    0x04
+#  define TIED_METHOD_ARGUMENTS_ON_STACK      0x08
+#  define TIED_METHOD_SAY                     0x10
 
 /* Used in various places that need to dereference a glob or globref */
 #  define MAYBE_DEREF_GV_flags(sv,phlags)                           \
@@ -725,11 +725,11 @@ True if this op will be the return value of an lvalue subroutine
                 ? (GV *)SvRV(sv)                                    \
                 : NULL                                              \
        )
-#  define MAYBE_DEREF_GV(sv)      MAYBE_DEREF_GV_flags(sv,SV_GMAGIC)
-#  define MAYBE_DEREF_GV_nomg(sv) MAYBE_DEREF_GV_flags(sv,0)
+#  define MAYBE_DEREF_GV(sv)                  MAYBE_DEREF_GV_flags(sv,SV_GMAGIC)
+#  define MAYBE_DEREF_GV_nomg(sv)             MAYBE_DEREF_GV_flags(sv,0)
 
-#  define FIND_RUNCV_padid_eq   1
-#  define FIND_RUNCV_level_eq   2
+#  define FIND_RUNCV_padid_eq     1
+#  define FIND_RUNCV_level_eq     2
 
 #endif
 

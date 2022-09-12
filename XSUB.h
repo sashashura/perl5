@@ -9,7 +9,7 @@
  */
 
 #ifndef PERL_XSUB_H_
-#define PERL_XSUB_H_ 1
+#define PERL_XSUB_H_    1
 
 /* first, some documentation for xsubpp-generated items */
 
@@ -108,13 +108,13 @@ is a lexical C<$_> in scope.
 */
 
 #ifndef PERL_UNUSED_ARG
-#  define PERL_UNUSED_ARG(x) ((void)sizeof(x))
+#  define PERL_UNUSED_ARG(x)  ((void)sizeof(x))
 #endif
 #ifndef PERL_UNUSED_VAR
-#  define PERL_UNUSED_VAR(x) ((void)sizeof(x))
+#  define PERL_UNUSED_VAR(x)  ((void)sizeof(x))
 #endif
 
-#define ST(off) PL_stack_base[ax + (off)]
+#define ST(off)         PL_stack_base[ax + (off)]
 
 /* XSPROTO() is also used by SWIG like this:
  *
@@ -134,36 +134,36 @@ is a lexical C<$_> in scope.
  * "STATIC", ie. it exports XSUB symbols. You probably don't want that.
  */
 
-#define XSPROTO(name) void name(pTHX_ CV* cv __attribute__unused__)
+#define XSPROTO(name)   void name(pTHX_ CV* cv __attribute__unused__)
 
 #undef XS
 #undef XS_EXTERNAL
 #undef XS_INTERNAL
 #if defined(__CYGWIN__) && defined(USE_DYNAMIC_LOADING)
-#  define XS_EXTERNAL(name) __declspec(dllexport) XSPROTO(name)
-#  define XS_INTERNAL(name) STATIC XSPROTO(name)
+#  define XS_EXTERNAL(name)   __declspec(dllexport) XSPROTO(name)
+#  define XS_INTERNAL(name)   STATIC XSPROTO(name)
 #elif defined(__cplusplus)
-#  define XS_EXTERNAL(name) extern "C" XSPROTO(name)
-#  define XS_INTERNAL(name) static XSPROTO(name)
+#  define XS_EXTERNAL(name)   extern "C" XSPROTO(name)
+#  define XS_INTERNAL(name)   static XSPROTO(name)
 #elif defined(HASATTRIBUTE_UNUSED)
-#  define XS_EXTERNAL(name) void name(pTHX_ CV* cv __attribute__unused__)
-#  define XS_INTERNAL(name) STATIC void name(pTHX_ CV* cv __attribute__unused__)
+#  define XS_EXTERNAL(name)   void name(pTHX_ CV* cv __attribute__unused__)
+#  define XS_INTERNAL(name)   STATIC void name(pTHX_ CV* cv __attribute__unused__)
 #else
-#  define XS_EXTERNAL(name) XSPROTO(name)
-#  define XS_INTERNAL(name) STATIC XSPROTO(name)
+#  define XS_EXTERNAL(name)   XSPROTO(name)
+#  define XS_INTERNAL(name)   STATIC XSPROTO(name)
 #endif
 
 /* We do export xsub symbols by default for the public XS macro.
  * Try explicitly using XS_INTERNAL/XS_EXTERNAL instead, please. */
-#define XS(name) XS_EXTERNAL(name)
+#define XS(name)                XS_EXTERNAL(name)
 
-#define dAX const I32 ax = (I32)(MARK - PL_stack_base + 1)
+#define dAX                     const I32 ax = (I32)(MARK - PL_stack_base + 1)
 
 #define dAXMARK         \
     I32 ax = POPMARK;   \
     SV **mark = PL_stack_base + ax++
 
-#define dITEMS I32 items = (I32)(SP - MARK)
+#define dITEMS                  I32 items = (I32)(SP - MARK)
 
 #define dXSARGS \
     dSP; dAXMARK; dITEMS
@@ -181,7 +181,7 @@ is a lexical C<$_> in scope.
     SV **mark = PL_stack_base + ax - 1; dSP; dITEMS
 /* dXSBOOTARGSNOVERCHK has no API in xsubpp to choose it so do
 #undef dXSBOOTARGSXSAPIVERCHK
-#define dXSBOOTARGSXSAPIVERCHK dXSBOOTARGSNOVERCHK */
+#define dXSBOOTARGSXSAPIVERCHK  dXSBOOTARGSNOVERCHK */
 #define dXSBOOTARGSNOVERCHK         \
     I32 ax = XS_SETXSUBFN_POPMARK;  \
     SV **mark = PL_stack_base + ax - 1; dSP; dITEMS
@@ -191,26 +191,26 @@ is a lexical C<$_> in scope.
                  ? PAD_SV(PL_op->op_targ) : sv_newmortal())
 
 /* Should be used before final PUSHi etc. if not in PPCODE section. */
-#define XSprePUSH (sp = PL_stack_base + ax - 1)
+#define XSprePUSH               (sp = PL_stack_base + ax - 1)
 
-#define XSANY CvXSUBANY(cv)
+#define XSANY                   CvXSUBANY(cv)
 
-#define dXSI32 I32 ix = XSANY.any_i32
+#define dXSI32                  I32 ix = XSANY.any_i32
 
 #ifdef __cplusplus
-#  define XSINTERFACE_CVT(ret,name) ret (*name)(...)
-#  define XSINTERFACE_CVT_ANON(ret) ret (*)(...)
+#  define XSINTERFACE_CVT(ret,name)   ret (*name)(...)
+#  define XSINTERFACE_CVT_ANON(ret)   ret (*)(...)
 #else
-#  define XSINTERFACE_CVT(ret,name) ret (*name)()
-#  define XSINTERFACE_CVT_ANON(ret) ret (*)()
+#  define XSINTERFACE_CVT(ret,name)   ret (*name)()
+#  define XSINTERFACE_CVT_ANON(ret)   ret (*)()
 #endif
-#define dXSFUNCTION(ret)                XSINTERFACE_CVT(ret,XSFUNCTION)
-#define XSINTERFACE_FUNC(ret,cv,f)     ((XSINTERFACE_CVT_ANON(ret))(f))
+#define dXSFUNCTION(ret)            XSINTERFACE_CVT(ret,XSFUNCTION)
+#define XSINTERFACE_FUNC(ret,cv,f)  ((XSINTERFACE_CVT_ANON(ret))(f))
 #define XSINTERFACE_FUNC_SET(cv,f)  \
     CvXSUBANY(cv).any_dxptr = (void (*) (pTHX_ void*))(f)
 
-#define dUNDERBAR dNOOP
-#define UNDERBAR  find_rundefsv()
+#define dUNDERBAR                   dNOOP
+#define UNDERBAR                    find_rundefsv()
 
 /* Simple macros to put new mortal values onto the stack.   */
 /* Typically used to return values from XS functions.       */
@@ -313,14 +313,14 @@ Rethrows a previously caught exception.  See L<perlguts/"Exception Handling">.
 =cut
 */
 
-#define XST_mIV(i,v)  (ST(i) = sv_2mortal(newSViv(v))  )
-#define XST_mUV(i,v)  (ST(i) = sv_2mortal(newSVuv(v))  )
-#define XST_mNV(i,v)  (ST(i) = sv_2mortal(newSVnv(v))  )
-#define XST_mPV(i,v)  (ST(i) = sv_2mortal(newSVpv(v,0)))
-#define XST_mPVN(i,v,n)  (ST(i) = newSVpvn_flags(v,n, SVs_TEMP))
-#define XST_mNO(i)    (ST(i) = &PL_sv_no   )
-#define XST_mYES(i)   (ST(i) = &PL_sv_yes  )
-#define XST_mUNDEF(i) (ST(i) = &PL_sv_undef)
+#define XST_mIV(i,v)                (ST(i) = sv_2mortal(newSViv(v))  )
+#define XST_mUV(i,v)                (ST(i) = sv_2mortal(newSVuv(v))  )
+#define XST_mNV(i,v)                (ST(i) = sv_2mortal(newSVnv(v))  )
+#define XST_mPV(i,v)                (ST(i) = sv_2mortal(newSVpv(v,0)))
+#define XST_mPVN(i,v,n)             (ST(i) = newSVpvn_flags(v,n, SVs_TEMP))
+#define XST_mNO(i)                  (ST(i) = &PL_sv_no   )
+#define XST_mYES(i)                 (ST(i) = &PL_sv_yes  )
+#define XST_mUNDEF(i)               (ST(i) = &PL_sv_undef)
 
 #define XSRETURN(off)                                       \
     STMT_START {                                            \
@@ -330,17 +330,17 @@ Rethrows a previously caught exception.  See L<perlguts/"Exception Handling">.
         return;                                             \
     } STMT_END
 
-#define XSRETURN_IV(v)    STMT_START { XST_mIV(0,v);    XSRETURN(1); } STMT_END
-#define XSRETURN_UV(v)    STMT_START { XST_mUV(0,v);    XSRETURN(1); } STMT_END
-#define XSRETURN_NV(v)    STMT_START { XST_mNV(0,v);    XSRETURN(1); } STMT_END
-#define XSRETURN_PV(v)    STMT_START { XST_mPV(0,v);    XSRETURN(1); } STMT_END
-#define XSRETURN_PVN(v,n) STMT_START { XST_mPVN(0,v,n); XSRETURN(1); } STMT_END
-#define XSRETURN_NO       STMT_START { XST_mNO(0);      XSRETURN(1); } STMT_END
-#define XSRETURN_YES      STMT_START { XST_mYES(0);     XSRETURN(1); } STMT_END
-#define XSRETURN_UNDEF    STMT_START { XST_mUNDEF(0);   XSRETURN(1); } STMT_END
-#define XSRETURN_EMPTY    STMT_START {                  XSRETURN(0); } STMT_END
+#define XSRETURN_IV(v)              STMT_START { XST_mIV(0,v);    XSRETURN(1); } STMT_END
+#define XSRETURN_UV(v)              STMT_START { XST_mUV(0,v);    XSRETURN(1); } STMT_END
+#define XSRETURN_NV(v)              STMT_START { XST_mNV(0,v);    XSRETURN(1); } STMT_END
+#define XSRETURN_PV(v)              STMT_START { XST_mPV(0,v);    XSRETURN(1); } STMT_END
+#define XSRETURN_PVN(v,n)           STMT_START { XST_mPVN(0,v,n); XSRETURN(1); } STMT_END
+#define XSRETURN_NO                 STMT_START { XST_mNO(0);      XSRETURN(1); } STMT_END
+#define XSRETURN_YES                STMT_START { XST_mYES(0);     XSRETURN(1); } STMT_END
+#define XSRETURN_UNDEF              STMT_START { XST_mUNDEF(0);   XSRETURN(1); } STMT_END
+#define XSRETURN_EMPTY              STMT_START {                  XSRETURN(0); } STMT_END
 
-#define newXSproto(a,b,c,d)     newXS_flags(a,b,c,d,0)
+#define newXSproto(a,b,c,d)         newXS_flags(a,b,c,d,0)
 
 #ifdef XS_VERSION
 #  define XS_VERSION_BOOTCHECK                                                      \
@@ -361,7 +361,7 @@ Rethrows a previously caught exception.  See L<perlguts/"Exception Handling">.
            HS_CXT, __FILE__, items, ax, "v" PERL_API_VERSION_STRING, XS_VERSION)
 #else
 /* should this be a #error? if you want both checked, you better supply XS_VERSION right? */
-#  define XS_BOTHVERSION_BOOTCHECK XS_APIVERSION_BOOTCHECK
+#  define XS_BOTHVERSION_BOOTCHECK    XS_APIVERSION_BOOTCHECK
 #endif
 
 /* private API */
@@ -374,7 +374,7 @@ Rethrows a previously caught exception.  See L<perlguts/"Exception Handling">.
            HS_CXT, __FILE__, "v" PERL_API_VERSION_STRING, XS_VERSION)
 #else
 /* should this be a #error? if you want both checked, you better supply XS_VERSION right? */
-#  define XS_BOTHVERSION_POPMARK_BOOTCHECK XS_APIVERSION_POPMARK_BOOTCHECK
+#  define XS_BOTHVERSION_POPMARK_BOOTCHECK    XS_APIVERSION_POPMARK_BOOTCHECK
 #endif
 
 #define XS_APIVERSION_SETXSUBFN_POPMARK_BOOTCHECK                           \
@@ -398,11 +398,11 @@ Rethrows a previously caught exception.  See L<perlguts/"Exception Handling">.
     Perl_xs_handshake(HS_KEY(TRUE, TRUE, "", "") | HSf_NOCHK, HS_CXT, __FILE__)
 
 #ifdef NO_XSLOCKS
-#  define dXCPT             dJMPENV; int rEtV = 0
-#  define XCPT_TRY_START    JMPENV_PUSH(rEtV); if (rEtV == 0)
-#  define XCPT_TRY_END      JMPENV_POP;
-#  define XCPT_CATCH        if (rEtV != 0)
-#  define XCPT_RETHROW      JMPENV_JUMP(rEtV)
+#  define dXCPT           dJMPENV; int rEtV = 0
+#  define XCPT_TRY_START  JMPENV_PUSH(rEtV); if (rEtV == 0)
+#  define XCPT_TRY_END    JMPENV_POP;
+#  define XCPT_CATCH      if (rEtV != 0)
+#  define XCPT_RETHROW    JMPENV_JUMP(rEtV)
 #endif
 
 /*
@@ -456,42 +456,42 @@ Rethrows a previously caught exception.  See L<perlguts/"Exception Handling">.
     } STMT_END
 
 #if 1           /* for compatibility */
-#  define VTBL_sv               &PL_vtbl_sv
-#  define VTBL_env              &PL_vtbl_env
-#  define VTBL_envelem          &PL_vtbl_envelem
-#  define VTBL_sigelem          &PL_vtbl_sigelem
-#  define VTBL_pack             &PL_vtbl_pack
-#  define VTBL_packelem         &PL_vtbl_packelem
-#  define VTBL_dbline           &PL_vtbl_dbline
-#  define VTBL_isa              &PL_vtbl_isa
-#  define VTBL_isaelem          &PL_vtbl_isaelem
-#  define VTBL_arylen           &PL_vtbl_arylen
-#  define VTBL_glob             &PL_vtbl_glob
-#  define VTBL_mglob            &PL_vtbl_mglob
-#  define VTBL_nkeys            &PL_vtbl_nkeys
-#  define VTBL_taint            &PL_vtbl_taint
-#  define VTBL_substr           &PL_vtbl_substr
-#  define VTBL_vec              &PL_vtbl_vec
-#  define VTBL_pos              &PL_vtbl_pos
-#  define VTBL_bm               &PL_vtbl_bm
-#  define VTBL_fm               &PL_vtbl_fm
-#  define VTBL_uvar             &PL_vtbl_uvar
-#  define VTBL_defelem          &PL_vtbl_defelem
-#  define VTBL_regexp           &PL_vtbl_regexp
-#  define VTBL_regdata          &PL_vtbl_regdata
-#  define VTBL_regdatum         &PL_vtbl_regdatum
+#  define VTBL_sv         &PL_vtbl_sv
+#  define VTBL_env        &PL_vtbl_env
+#  define VTBL_envelem    &PL_vtbl_envelem
+#  define VTBL_sigelem    &PL_vtbl_sigelem
+#  define VTBL_pack       &PL_vtbl_pack
+#  define VTBL_packelem   &PL_vtbl_packelem
+#  define VTBL_dbline     &PL_vtbl_dbline
+#  define VTBL_isa        &PL_vtbl_isa
+#  define VTBL_isaelem    &PL_vtbl_isaelem
+#  define VTBL_arylen     &PL_vtbl_arylen
+#  define VTBL_glob       &PL_vtbl_glob
+#  define VTBL_mglob      &PL_vtbl_mglob
+#  define VTBL_nkeys      &PL_vtbl_nkeys
+#  define VTBL_taint      &PL_vtbl_taint
+#  define VTBL_substr     &PL_vtbl_substr
+#  define VTBL_vec        &PL_vtbl_vec
+#  define VTBL_pos        &PL_vtbl_pos
+#  define VTBL_bm         &PL_vtbl_bm
+#  define VTBL_fm         &PL_vtbl_fm
+#  define VTBL_uvar       &PL_vtbl_uvar
+#  define VTBL_defelem    &PL_vtbl_defelem
+#  define VTBL_regexp     &PL_vtbl_regexp
+#  define VTBL_regdata    &PL_vtbl_regdata
+#  define VTBL_regdatum   &PL_vtbl_regdatum
 #  ifdef USE_LOCALE_COLLATE
-#    define VTBL_collxfrm       &PL_vtbl_collxfrm
+#    define VTBL_collxfrm   &PL_vtbl_collxfrm
 #  endif
-#  define VTBL_amagic           &PL_vtbl_amagic
-#  define VTBL_amagicelem       &PL_vtbl_amagicelem
+#  define VTBL_amagic         &PL_vtbl_amagic
+#  define VTBL_amagicelem     &PL_vtbl_amagicelem
 #endif
 
 #if defined(MULTIPLICITY) && !defined(PERL_NO_GET_CONTEXT) && !defined(PERL_CORE)
 #  undef aTHX
 #  undef aTHX_
-#  define aTHX          PERL_GET_THX
-#  define aTHX_         aTHX,
+#  define aTHX                PERL_GET_THX
+#  define aTHX_               aTHX,
 #endif
 
 #if defined(PERL_IMPLICIT_SYS) && !defined(PERL_CORE)

@@ -11,7 +11,7 @@
  * This is "source level" stdio compatibility mode.
  * We try and #define stdio functions in terms of PerlIO.
  */
-#define _CANNOT "CANNOT"
+#define _CANNOT     "CANNOT"
 #undef FILE
 #define FILE                    PerlIO
 #undef clearerr
@@ -61,9 +61,9 @@
    than the rest
  */
 #if defined(__GNUC__) && !defined(__STRICT_ANSI__) && !defined(PERL_GCC_PEDANTIC)
-#define printf(fmt,args...) PerlIO_stdoutf(fmt,##args)
+#define printf(fmt,args...)     PerlIO_stdoutf(fmt,##args)
 #else
-#define printf PerlIO_stdoutf
+#define printf                  PerlIO_stdoutf
 #endif
 
 #define fprintf                 PerlIO_printf
