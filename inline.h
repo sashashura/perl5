@@ -1230,7 +1230,8 @@ C<L</is_c9strict_utf8_string_loclen>>.
 =cut
 */
 
-#define is_strict_utf8_string(s, len)  is_strict_utf8_string_loclen(s, len, NULL, NULL)
+#define is_strict_utf8_string(s, len)   \
+    is_strict_utf8_string_loclen(s, len, NULL, NULL)
 
 /*
 =for apidoc is_c9strict_utf8_string
@@ -1270,7 +1271,8 @@ C<L</is_c9strict_utf8_string_loclen>>.
 =cut
 */
 
-#define is_c9strict_utf8_string(s, len)  is_c9strict_utf8_string_loclen(s, len, NULL, 0)
+#define is_c9strict_utf8_string(s, len) \
+    is_c9strict_utf8_string_loclen(s, len, NULL, 0)
 
 /*
 =for apidoc is_utf8_string_flags

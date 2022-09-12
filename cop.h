@@ -531,14 +531,16 @@ string C<p>, creating the package if necessary.
        ((c)->cop_stashoff = (hv)    \
            ? alloccopstash(hv)      \
            : 0)
-#  define CopFILE_free(c)       (PerlMemShared_free(CopFILE(c)),(CopFILE(c) = NULL))
+#  define CopFILE_free(c)   \
+       (PerlMemShared_free(CopFILE(c)),(CopFILE(c) = NULL))
 
 #else /* Above: yes threads; Below no threads */
 
 #  define CopFILEGV(c)          ((c)->cop_filegv)
 #  define CopFILEGV_set(c,gv)   ((c)->cop_filegv = (GV*)SvREFCNT_inc(gv))
 #  define CopFILE_set(c,pv)     CopFILEGV_set((c), gv_fetchfile(pv))
-#  define CopFILE_setn(c,pv,l)  CopFILEGV_set((c), gv_fetchfile_flags((pv),(l),0))
+#  define CopFILE_setn(c,pv,l)  \
+       CopFILEGV_set((c), gv_fetchfile_flags((pv),(l),0))
 #  define CopFILESV(c)          (CopFILEGV(c) ? GvSV(CopFILEGV(c)) : NULL)
 #  define CopFILEAV(c)          (CopFILEGV(c) ? GvAV(CopFILEGV(c)) : NULL)
 #  ifdef DEBUGGING
@@ -552,7 +554,8 @@ string C<p>, creating the package if necessary.
            ? GvNAME(CopFILEGV(c))+2 : NULL)
 #  define CopSTASH(c)           ((c)->cop_stash)
 #  define CopSTASH_set(c,hv)    ((c)->cop_stash = (hv))
-#  define CopFILE_free(c)       (SvREFCNT_dec(CopFILEGV(c)),(CopFILEGV(c) = NULL))
+#  define CopFILE_free(c)   \
+       (SvREFCNT_dec(CopFILEGV(c)),(CopFILEGV(c) = NULL))
 
 #endif /* USE_ITHREADS */
 
@@ -683,7 +686,8 @@ by setting C<*flags> to 0 or C<SVf_UTF8>.
 
 #define CopLABEL(c)  Perl_cop_fetch_label(aTHX_ (c), NULL, NULL)
 #define CopLABEL_len(c,len)  Perl_cop_fetch_label(aTHX_ (c), len, NULL)
-#define CopLABEL_len_flags(c,len,flags)  Perl_cop_fetch_label(aTHX_ (c), len, flags)
+#define CopLABEL_len_flags(c,len,flags) \
+    Perl_cop_fetch_label(aTHX_ (c), len, flags)
 #define CopLABEL_alloc(pv)      ((pv)?savepv(pv):NULL)
 
 #define CopSTASH_ne(c,hv)       (!CopSTASH_eq(c,hv))
@@ -841,7 +845,8 @@ struct block_loop {
 
 #define CxLABEL(c)      (CopLABEL((c)->blk_oldcop))
 #define CxLABEL_len(c,len)      (CopLABEL_len((c)->blk_oldcop, len))
-#define CxLABEL_len_flags(c,len,flags)  ((const char *)CopLABEL_len_flags((c)->blk_oldcop, len, flags))
+#define CxLABEL_len_flags(c,len,flags)  \
+    ((const char *)CopLABEL_len_flags((c)->blk_oldcop, len, flags))
 #define CxHASARGS(c)    (((c)->cx_type & CXp_HASARGS) == CXp_HASARGS)
 
 /* CxLVAL(): the lval flags of the call site: the relevant flag bits from
